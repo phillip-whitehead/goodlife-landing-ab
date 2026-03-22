@@ -49,7 +49,9 @@ sys.path.insert(0, str(SCRIPT_DIR))
 from cro_report import (
     pull_ga4_data,
     pull_hubspot_data,
+    pull_clarity_data,
     generate_insights,
+    clarity_insights,
     AB_VERSIONS,
 )
 
