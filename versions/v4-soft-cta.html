@@ -75,7 +75,7 @@
 
   /* HERO */
   .hero {
-    position: relative; min-height: 92vh; display: flex; align-items: center;
+    position: relative; min-height: 82vh; display: flex; align-items: center;
     background: linear-gradient(165deg, rgba(13,59,76,0.72) 0%, rgba(26,92,107,0.65) 40%, rgba(42,163,176,0.55) 100%), url(https://www.thegoodlifebahamasrentals.com/wp-content/uploads/2025/07/HomeHero.webp); background-size: cover; background-position: center;
     overflow: hidden; padding-top: 72px;
   }
@@ -116,31 +116,19 @@
   .hero-stat .number { font-size: 1.8rem; font-weight: 900; color: white; }
   .hero-stat .label { font-size: 0.8rem; color: rgba(255,255,255,0.7); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
 
-  .hero-visual { position: relative; }
-  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 12px; }
-  .hero-img { border-radius: var(--radius); overflow: hidden; position: relative; aspect-ratio: 4/3; }
-  .hero-img.large { grid-column: 1 / -1; aspect-ratio: 16/9; }
-  .hero-float-badge { position: absolute; bottom: 20px; right: 20px; background: white; border-radius: var(--radius-sm); padding: 14px 18px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px; z-index: 3; }
-  .hero-float-badge .stars { color: var(--orange); font-size: 0.9rem; }
-  .hero-float-badge .text { font-size: 0.8rem; font-weight: 700; }
-  .hero-float-badge .sub { font-size: 0.7rem; color: var(--dark-light); }
-
-  /* V4 CHANGE: Problem / Solution text panels */
-  .hero-text-panel { display: flex; }
-  .panel-content { padding: 24px 22px; display: flex; flex-direction: column; gap: 10px; justify-content: center; width: 100%; }
-  .panel-tag { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; }
-  .panel-content h3 { font-size: 1rem; line-height: 1.3; margin: 0; }
-  .panel-content p { font-size: 0.82rem; line-height: 1.55; margin: 0; }
-
-  .problem-panel { background: linear-gradient(145deg, #0d3b4c 0%, #1a5c6b 100%); }
-  .problem-panel .panel-tag { color: rgba(255,255,255,0.5); }
-  .problem-panel .panel-content h3 { color: white; }
-  .problem-panel .panel-content p { color: rgba(255,255,255,0.72); }
-
-  .solution-panel { background: linear-gradient(145deg, #b85820 0%, #e8843c 100%); }
-  .solution-panel .panel-tag { color: rgba(255,255,255,0.6); }
-  .solution-panel .panel-content h3 { color: white; }
-  .solution-panel .panel-content p { color: rgba(255,255,255,0.88); }
+  /* V4 CHANGE: Right-side text column — no cards/boxes */
+  .hero-right { display: flex; flex-direction: column; gap: 28px; padding: 8px 0; }
+  .hero-right-block { display: flex; flex-direction: column; gap: 10px; }
+  .hero-right-tag { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; }
+  .hero-right-tag.problem { color: rgba(255,255,255,0.5); }
+  .hero-right-tag.solution { color: var(--orange); }
+  .hero-right-tag.trust { color: var(--teal); }
+  .hero-right-block h3 { color: white; font-size: 1.15rem; line-height: 1.3; font-weight: 800; margin: 0; }
+  .hero-right-block p { color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.65; margin: 0; }
+  .hero-right-divider { width: 40px; height: 2px; background: rgba(255,255,255,0.2); border-radius: 2px; }
+  .hero-trust-pills { display: flex; flex-direction: column; gap: 8px; }
+  .hero-trust-pill { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+  .hero-trust-pill .pill-check { width: 20px; height: 20px; border-radius: 50%; background: rgba(49,184,198,0.25); border: 1px solid rgba(49,184,198,0.5); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--teal); flex-shrink: 0; }
 
   /* SEARCH BAR */
   .search-section { position: relative; z-index: 10; margin-top: -44px; }
@@ -313,7 +301,7 @@
     .hero-sub { margin-left: auto; margin-right: auto; }
     .hero-actions { justify-content: center; }
     .hero-stats { justify-content: center; }
-    .hero-visual { display: none; }
+    .hero-right { display: none; }
     .property-grid { grid-template-columns: repeat(2, 1fr); }
     .island-grid { grid-template-columns: repeat(3, 1fr); }
     .why-grid { grid-template-columns: 1fr; }
@@ -379,36 +367,34 @@
         <div class="hero-stat"><div class="number">15+</div><div class="label">Years Local Expertise</div></div>
       </div>
     </div>
-    <div class="hero-visual">
-      <div class="hero-grid">
-        <div class="hero-img large"><img src="https://www.thegoodlifebahamasrentals.com/wp-content/uploads/2025/07/HomeHero.webp" alt="Luxury beachfront villa in the Bahamas" style="width:100%;height:100%;object-fit:cover;"></div>
+    <!-- V4 CHANGE: Right side is pure text — problem / solution / trust signals -->
+    <div class="hero-right">
 
-        <!-- V4 CHANGE: Problem statement panel (replaces photo) -->
-        <div class="hero-img hero-text-panel problem-panel">
-          <div class="panel-content">
-            <div class="panel-tag">The Problem</div>
-            <h3>Tired of cookie-cutter resorts?</h3>
-            <p>Generic rooms, crowded pools, overpriced packages — and a vacation that looks exactly like everyone else's.</p>
-          </div>
-        </div>
-
-        <!-- V4 CHANGE: Solution statement panel (replaces photo) -->
-        <div class="hero-img hero-text-panel solution-panel">
-          <div class="panel-content">
-            <div class="panel-tag">The Good Life</div>
-            <h3>Handpicked villas. Your way.</h3>
-            <p>Private chefs, personal concierge, and local expertise across 6 stunning islands. Authentic Bahamas, not tourist Bahamas.</p>
-          </div>
-        </div>
-
+      <div class="hero-right-block">
+        <div class="hero-right-tag problem">The Problem</div>
+        <h3>Tired of cookie-cutter resorts?</h3>
+        <p>Generic rooms, crowded pools, overpriced packages — and a vacation that looks exactly like everyone else's. You paid a premium for something that felt anything but premium.</p>
       </div>
-      <div class="hero-float-badge">
-        <div>
-          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <div class="text">5-Star Rated</div>
-          <div class="sub">Trusted by hundreds of guests</div>
+
+      <div class="hero-right-divider"></div>
+
+      <div class="hero-right-block">
+        <div class="hero-right-tag solution">The Good Life Difference</div>
+        <h3>Handpicked villas. Your Bahamas. Your way.</h3>
+        <p>Private chefs, personal concierge, and 15+ years of on-the-ground expertise across 6 stunning islands. This isn't tourist Bahamas — it's the real thing.</p>
+      </div>
+
+      <div class="hero-right-divider"></div>
+
+      <div class="hero-right-block">
+        <div class="hero-right-tag trust">Why guests trust us</div>
+        <div class="hero-trust-pills">
+          <div class="hero-trust-pill"><span class="pill-check">✓</span> Emmy-nominated properties, Top 100 Collection 2025</div>
+          <div class="hero-trust-pill"><span class="pill-check">✓</span> 5-star rated by hundreds of returning guests</div>
+          <div class="hero-trust-pill"><span class="pill-check">✓</span> Local team — here before, during &amp; after your stay</div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
