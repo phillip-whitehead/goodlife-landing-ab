@@ -30,11 +30,15 @@ warnings.filterwarnings('ignore')
 # ── Config ────────────────────────────────────────────────────────────────────
 # Set these via environment variables or a local .env file (never commit secrets)
 # Copy .env.example to .env and fill in your values
-GA4_KEY_FILE     = os.getenv('GA4_KEY_FILE', '')
-GA4_PROPERTY_ID  = os.getenv('GA4_PROPERTY_ID', '375125067')
-HUBSPOT_TOKEN    = os.getenv('HUBSPOT_TOKEN', '')
-HUBSPOT_PORTAL   = '21915863'
-PIPELINE_ID      = '48052530'
+GA4_KEY_FILE        = os.getenv('GA4_KEY_FILE', '')
+GA4_PROPERTY_ID     = os.getenv('GA4_PROPERTY_ID', '375125067')
+HUBSPOT_TOKEN       = os.getenv('HUBSPOT_TOKEN', '')
+CLARITY_PROJECT_ID  = os.getenv('CLARITY_PROJECT_ID', '')   # e.g. "abcde12345"
+CLARITY_API_KEY     = os.getenv('CLARITY_API_KEY', '')       # from Clarity → Settings → API
+HUBSPOT_PORTAL      = '21915863'
+PIPELINE_ID         = '48052530'
+
+CLARITY_BASE = 'https://www.clarity.ms/api/v1'
 
 # Vacation rental pipeline stages in order
 PIPELINE_STAGES = {
@@ -67,6 +71,220 @@ AB_VERSIONS = {
 }
 
 HS_HEADERS = {'Authorization': f'Bearer {HUBSPOT_TOKEN}', 'Content-Type': 'application/json'}
+
+
+# ── Clarity helpers ───────────────────────────────────────────────────────────
+
+def _clarity_headers():
+    return {
+        'Authorization': f'Bearer {CLARITY_API_KEY}',
+        'Content-Type': 'application/json',
+    }
+
+
+def pull_clarity_data(days=7):
+    """
+    Pull behavioural metrics from Microsoft Clarity API.
+
+    Returns a dict with:
+      - by_page:    per page-URL metrics (rage_click_rate, dead_click_rate,
+                    scroll_depth, quick_back_rate, session_count)
+      - overall:    site-wide aggregates for the period
+      - version_pages: filtered to /versions/week-* and /versions/v* paths
+      - clarity_link: direct dashboard URL pre-filtered to the period
+
+    Requires env vars: CLARITY_PROJECT_ID, CLARITY_API_KEY
+    Gracefully returns empty structure if credentials are missing.
+    """
+    if not CLARITY_PROJECT_ID or not CLARITY_API_KEY:
+        return {
+            'available': False,
+            'reason': 'CLARITY_PROJECT_ID or CLARITY_API_KEY not set. '
+                      'Get your API key from Clarity → Settings → API.',
+            'by_page': [],
+            'overall': {},
+            'version_pages': {},
+        }
+
+    end_dt   = datetime.now()
+    start_dt = end_dt - timedelta(days=days)
+    start_str = start_dt.strftime('%Y-%m-%d')
+    end_str   = end_dt.strftime('%Y-%m-%d')
+
+    results = {'available': True, 'by_page': [], 'overall': {}, 'version_pages': {}}
+
+    # 1. Overall project metrics for the period
+    try:
+        url = f'{CLARITY_BASE}/{CLARITY_PROJECT_ID}/metrics'
+        params = {
+            'startDate': start_str,
+            'endDate':   end_str,
+            'granularity': 'daily',
+        }
+        r = requests.get(url, headers=_clarity_headers(), params=params, timeout=15)
+        if r.status_code == 200:
+            data = r.json()
+            # Aggregate across all days
+            totals = {
+                'sessions':          0,
+                'rage_click_pct':    0.0,
+                'dead_click_pct':    0.0,
+                'quick_back_pct':    0.0,
+                'excessive_scroll_pct': 0.0,
+                'avg_scroll_depth':  0.0,
+                'avg_active_time':   0.0,
+            }
+            rows = data.get('data', []) or data.get('metrics', [])
+            if rows:
+                for row in rows:
+                    totals['sessions']             += int(row.get('sessionCount', 0))
+                    totals['rage_click_pct']        += float(row.get('rageClickCount', 0))
+                    totals['dead_click_pct']        += float(row.get('deadClickCount', 0))
+                    totals['quick_back_pct']        += float(row.get('quickBackCount', 0))
+                    totals['excessive_scroll_pct']  += float(row.get('excessiveScrollCount', 0))
+                    totals['avg_scroll_depth']      += float(row.get('scrollDepth', 0))
+                    totals['avg_active_time']       += float(row.get('activeTime', 0))
+                n = len(rows)
+                if totals['sessions'] > 0:
+                    totals['rage_click_pct']       = round(totals['rage_click_pct']       / totals['sessions'] * 100, 2)
+                    totals['dead_click_pct']       = round(totals['dead_click_pct']       / totals['sessions'] * 100, 2)
+                    totals['quick_back_pct']       = round(totals['quick_back_pct']       / totals['sessions'] * 100, 2)
+                    totals['excessive_scroll_pct'] = round(totals['excessive_scroll_pct'] / totals['sessions'] * 100, 2)
+                if n > 0:
+                    totals['avg_scroll_depth'] = round(totals['avg_scroll_depth'] / n, 1)
+                    totals['avg_active_time']  = round(totals['avg_active_time']  / n, 1)
+            results['overall'] = totals
+        else:
+            results['overall_error'] = f'HTTP {r.status_code}: {r.text[:200]}'
+    except Exception as e:
+        results['overall_error'] = str(e)
+
+    # 2. Per-page metrics — filter to version pages
+    try:
+        url = f'{CLARITY_BASE}/{CLARITY_PROJECT_ID}/metrics'
+        params = {
+            'startDate': start_str,
+            'endDate':   end_str,
+            'granularity': 'total',
+            'groupBy': 'page',
+        }
+        r = requests.get(url, headers=_clarity_headers(), params=params, timeout=15)
+        if r.status_code == 200:
+            data = r.json()
+            rows = data.get('data', []) or data.get('metrics', [])
+            version_pages = {}
+            all_pages = []
+            for row in rows:
+                page_url = row.get('pageUrl') or row.get('url') or row.get('page', '')
+                sessions = int(row.get('sessionCount', 0))
+                entry = {
+                    'page':                page_url,
+                    'sessions':            sessions,
+                    'rage_click_pct':      round(float(row.get('rageClickCount',  0)) / max(sessions,1) * 100, 2),
+                    'dead_click_pct':      round(float(row.get('deadClickCount',  0)) / max(sessions,1) * 100, 2),
+                    'quick_back_pct':      round(float(row.get('quickBackCount',  0)) / max(sessions,1) * 100, 2),
+                    'scroll_depth':        round(float(row.get('scrollDepth',     0)), 1),
+                    'avg_active_time_sec': round(float(row.get('activeTime',      0)), 1),
+                }
+                all_pages.append(entry)
+                if '/versions/' in page_url:
+                    # Derive version key: /versions/week-3.html → week-3
+                    key = page_url.split('/versions/')[-1].replace('.html', '').split('?')[0]
+                    version_pages[key] = entry
+            results['by_page']      = sorted(all_pages, key=lambda x: -x['sessions'])[:20]
+            results['version_pages'] = version_pages
+    except Exception as e:
+        results['page_error'] = str(e)
+
+    # 3. Top rage-click elements (if endpoint available)
+    try:
+        url = f'{CLARITY_BASE}/{CLARITY_PROJECT_ID}/clicks'
+        params = {
+            'startDate':    start_str,
+            'endDate':      end_str,
+            'clickType':    'rage',
+            'limit':        10,
+        }
+        r = requests.get(url, headers=_clarity_headers(), params=params, timeout=15)
+        if r.status_code == 200:
+            data = r.json()
+            results['top_rage_clicks'] = (data.get('data') or data.get('clicks') or [])[:5]
+    except Exception:
+        results['top_rage_clicks'] = []
+
+    # 4. Convenience link to Clarity dashboard filtered to this period
+    results['clarity_link'] = (
+        f'https://clarity.microsoft.com/projects/view/{CLARITY_PROJECT_ID}/impressions'
+        f'?date={start_str}_{end_str}'
+    )
+
+    return results
+
+
+def clarity_insights(clarity):
+    """Generate actionable insights from Clarity data."""
+    insights = []
+    recs     = []
+
+    if not clarity.get('available'):
+        insights.append(f"⚪ Clarity: {clarity.get('reason', 'not configured')}")
+        return insights, recs
+
+    overall = clarity.get('overall', {})
+    if not overall:
+        return insights, recs
+
+    rage  = overall.get('rage_click_pct',      0)
+    dead  = overall.get('dead_click_pct',       0)
+    qback = overall.get('quick_back_pct',       0)
+    scroll = overall.get('avg_scroll_depth',    0)
+    xscroll = overall.get('excessive_scroll_pct', 0)
+
+    if rage > 5:
+        insights.append(f"😡 Rage clicks: {rage}% of sessions — users are repeatedly clicking something that isn't responding.")
+        recs.append("Check Clarity heatmap for rage-click hotspots. Common causes: non-clickable elements that look interactive, "
+                    "broken links, or CTA buttons with delayed JS responses.")
+
+    if dead > 15:
+        insights.append(f"💀 Dead clicks: {dead}% of sessions — users click areas with no action.")
+        recs.append("Review dead-click map in Clarity. Users may be clicking images, headers, or cards expecting them to link somewhere. "
+                    "Either make those elements interactive or remove visual affordances that suggest clickability.")
+
+    if qback > 20:
+        insights.append(f"⏪ Quick-back rate: {qback}% — visitors navigate back quickly, signalling a mismatch between ad/search intent and page content.")
+        recs.append("High quick-back rate suggests message mismatch. The page headline or hero must mirror the ad copy or Google snippet that brought visitors in.")
+
+    if scroll and scroll < 40:
+        insights.append(f"📜 Average scroll depth: {scroll}% — most visitors don't see anything below the hero section.")
+        recs.append("Move your highest-converting element (form or primary CTA) above the fold. "
+                    "Content below 40% scroll depth is invisible to the majority of visitors.")
+    elif scroll and scroll < 60:
+        insights.append(f"📜 Scroll depth: {scroll}% — visitors scroll past the hero but stop before the property cards / Why Us section.")
+
+    if xscroll > 10:
+        insights.append(f"↕️  Excessive scrolling: {xscroll}% of sessions — users can't find what they're looking for and scroll erratically.")
+        recs.append("Excessive scrolling means the page lacks clear visual hierarchy. "
+                    "Add a sticky nav or anchor links so visitors can jump directly to properties, pricing, or the inquiry form.")
+
+    # Per-version Clarity insights
+    version_pages = clarity.get('version_pages', {})
+    if version_pages:
+        insights.append("\n── Clarity per-version behaviour ──")
+        for vk, vdata in sorted(version_pages.items(), key=lambda x: -x[1]['sessions']):
+            insights.append(
+                f"  {vk}: {vdata['sessions']} sessions | "
+                f"rage={vdata['rage_click_pct']}% | "
+                f"dead={vdata['dead_click_pct']}% | "
+                f"scroll={vdata['scroll_depth']}% | "
+                f"active={vdata['avg_active_time_sec']}s"
+            )
+        # Flag worst rage-click version
+        worst = max(version_pages.items(), key=lambda x: x[1]['rage_click_pct'], default=None)
+        if worst and worst[1]['rage_click_pct'] > 3:
+            recs.append(f"Version '{worst[0]}' has the highest rage-click rate ({worst[1]['rage_click_pct']}%). "
+                        f"Check Clarity heatmap for that page — something is broken or confusing.")
+
+    return insights, recs
 
 
 # ── GA4 helpers ───────────────────────────────────────────────────────────────
@@ -601,8 +819,21 @@ def main():
     print("Pulling HubSpot pipeline data...")
     hs = pull_hubspot_data(days=args.days)
 
+    print("Pulling Clarity behavioural data...")
+    clarity = pull_clarity_data(days=args.days)
+    if clarity.get('available'):
+        print(f"  ✓ Clarity: {clarity['overall'].get('sessions', 0):,} sessions | "
+              f"rage={clarity['overall'].get('rage_click_pct', 0)}% | "
+              f"dead={clarity['overall'].get('dead_click_pct', 0)}% | "
+              f"scroll depth={clarity['overall'].get('avg_scroll_depth', 0)}%")
+    else:
+        print(f"  ⚠  Clarity: {clarity.get('reason', 'not available')}")
+
     print("Generating insights...")
     insights, recs = generate_insights(ga4, hs)
+    c_insights, c_recs = clarity_insights(clarity)
+    insights += c_insights
+    recs     += c_recs
 
     print_report(ga4, hs, insights, recs, days=args.days)
 
