@@ -690,5 +690,109 @@
     });
   });
 </script>
+
+<!-- A/B Version Tracking + Form Submission -->
+<script>
+(function() {
+  var path = window.location.pathname;
+  var versionMatch = path.match(/\/versions\/(v[\w-]+)\.html/);
+  var VERSION = versionMatch ? versionMatch[1] : 'direct';
+
+  function getCookie(name) {
+    var m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+  function setCookie(name, val, days) {
+    var d = new Date();
+    d.setTime(d.getTime() + days * 864e5);
+    document.cookie = name + '=' + encodeURIComponent(val) + ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax';
+  }
+  if (!getCookie('gl_version')) setCookie('gl_version', VERSION, 30);
+  try { sessionStorage.setItem('gl_version', VERSION); } catch(e) {}
+
+  window.addEventListener('load', function() {
+    if (typeof gtag === 'function') {
+      gtag('event', 'ab_test', { ab_version: VERSION });
+    }
+  });
+
+  function wireForm() {
+    var submitBtns = document.querySelectorAll('.form-submit, button[type="submit"], .inquiry-form button');
+    var nameInput  = document.querySelector('.form-field input[type="text"], input[name="firstname"]');
+    var emailInput = document.querySelector('.form-field input[type="email"], input[name="email"], input[type="email"]');
+
+    if (!submitBtns.length || !emailInput) return;
+
+    // Track form_start on first focus
+    var startTracked = false;
+    [nameInput, emailInput].filter(Boolean).forEach(function(el) {
+      el.addEventListener('focus', function() {
+        if (!startTracked) {
+          startTracked = true;
+          if (typeof gtag === 'function') gtag('event', 'form_start', { ab_version: VERSION });
+        }
+      }, { once: true });
+    });
+
+    submitBtns.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var email = emailInput.value.trim();
+        if (!email || !email.includes('@')) {
+          emailInput.style.borderColor = '#e74c3c';
+          emailInput.focus();
+          return;
+        }
+        emailInput.style.borderColor = '';
+        var name = nameInput ? nameInput.value.trim() : '';
+        var originalHTML = btn.innerHTML;
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+
+        if (typeof gtag === 'function') {
+          gtag('event', 'inquire_form_submit', { ab_version: VERSION });
+        }
+
+        fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstname: name, email: email, gl_version: VERSION,
+                                 page_url: window.location.href, referrer: document.referrer })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.success) {
+            var wrap = btn.closest('.inquiry-form, .final-cta-section, section') || btn.parentElement;
+            wrap.innerHTML = '<div style="text-align:center;padding:40px 16px">'
+              + '<div style="font-size:2.8rem;margin-bottom:14px">&#127796;</div>'
+              + '<h3 style="font-size:1.25rem;margin-bottom:10px">You're on the list!</h3>'
+              + '<p style="color:#666;max-width:340px;margin:0 auto;font-size:0.9rem">'
+              + 'We'll send your personalised Bahamas shortlist within 2 hours. '
+              + 'Check your inbox (and spam, just in case).</p></div>';
+            if (typeof gtag === 'function') gtag('event', 'form_submit', { ab_version: VERSION });
+          } else {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            alert('Something went wrong. Call us: +1 (305) 701-4133');
+          }
+        })
+        .catch(function() {
+          btn.innerHTML = originalHTML;
+          btn.disabled = false;
+          window.location.href = 'mailto:rentals@thegoodlifebahamas.com'
+            + '?subject=' + encodeURIComponent('Bahamas Villa Inquiry')
+            + '&body=' + encodeURIComponent('Name: ' + name + '\nEmail: ' + email);
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireForm);
+  } else {
+    wireForm();
+  }
+})();
+</script>
 </body>
 </html>
