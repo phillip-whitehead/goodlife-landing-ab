@@ -9,858 +9,1047 @@
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'Mulish', sans-serif; background: #0D1B2A; color: #E2E8F0; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: 'Mulish', sans-serif;
+    background: #0D1B2A;
+    color: #E2E8F0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
   a { text-decoration: none; color: inherit; }
 
   :root {
-    --teal: #31B8C6; --teal-dark: #2AA3B0; --teal-glow: rgba(49,184,198,0.15);
-    --orange: #F28F52; --dark: #0D1B2A; --darker: #080F18;
-    --card-bg: #1A2B3C; --card-bg-2: #152232; --border: rgba(255,255,255,0.07);
-    --border-teal: rgba(49,184,198,0.25); --green: #22C55E; --yellow: #EAB308;
-    --blue: #3B82F6; --purple: #A855F7; --red: #EF4444;
-    --text-muted: rgba(255,255,255,0.45); --text-mid: rgba(255,255,255,0.65);
+    --teal: #31B8C6;
+    --teal-dark: #2AA3B0;
+    --teal-glow: rgba(49,184,198,0.15);
+    --orange: #F28F52;
+    --dark: #0D1B2A;
+    --darker: #080F18;
+    --card-bg: #1A2B3C;
+    --card-bg-2: #152232;
+    --border: rgba(255,255,255,0.07);
+    --border-teal: rgba(49,184,198,0.25);
+    --green: #22C55E;
+    --yellow: #EAB308;
+    --blue: #3B82F6;
+    --red: #EF4444;
+    --text-muted: rgba(255,255,255,0.45);
+    --text-mid: rgba(255,255,255,0.65);
   }
 
-  /* ── Top stats bar ───────────────────────────────────────────────────────── */
+  /* ─── Preview URL bar ──────────────────────────────────────────────── */
+  .preview-bar {
+    background: #080F18;
+    border-bottom: 1px solid rgba(49,184,198,0.2);
+    padding: 9px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+  }
+  .preview-bar .label {
+    font-weight: 700;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .preview-bar a {
+    color: var(--text-mid);
+    font-weight: 600;
+    transition: color 0.18s;
+  }
+  .preview-bar a:hover { color: var(--teal); }
+
+  /* ─── Top stats bar ─────────────────────────────────────────────────── */
   .stats-bar {
     background: var(--darker);
     border-bottom: 1px solid var(--border-teal);
-    padding: 10px 24px;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px;
+    padding: 11px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
   }
   .stats-bar-items {
-    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
   }
-  .stats-bar-item {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 0.78rem; font-weight: 600; color: var(--text-mid);
+  .stat-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    padding: 0 18px;
+    border-right: 1px solid var(--border);
   }
-  .stats-bar-item .dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0;
-  }
-  .stats-bar-item .dot.orange { background: var(--orange); }
-  .stats-bar-item strong { color: white; }
-  .run-btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: rgba(49,184,198,0.12); border: 1px solid var(--border-teal);
-    color: var(--teal); padding: 7px 16px; border-radius: 8px;
-    font-size: 0.78rem; font-weight: 700; transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .run-btn:hover { background: rgba(49,184,198,0.22); color: white; }
-  .run-btn-icon { font-size: 0.85rem; }
-
-  /* ── Header ─────────────────────────────────────────────────────────────── */
-  .header {
-    padding: 44px 24px 36px;
-    text-align: center;
-    background: linear-gradient(180deg, #080F18 0%, #0D1B2A 100%);
-    border-bottom: 1px solid var(--border);
-  }
-  .header-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(49,184,198,0.12); border: 1px solid var(--border-teal);
-    color: var(--teal); padding: 6px 18px; border-radius: 50px;
-    font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
-    letter-spacing: 0.1em; margin-bottom: 22px;
-  }
-  .header h1 {
-    font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 900; color: white;
-    margin-bottom: 14px; line-height: 1.15;
-  }
-  .header h1 .accent { color: var(--teal); }
-  .header .sub {
-    color: var(--text-muted); font-size: 0.97rem; max-width: 580px;
-    margin: 0 auto; line-height: 1.7;
-  }
-
-  /* ── Section chrome ──────────────────────────────────────────────────────── */
-  .section-wrapper { max-width: 1300px; margin: 0 auto; padding: 0 24px; }
-
-  .section-header {
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 20px; flex-wrap: wrap;
-    padding: 52px 0 32px;
-  }
-  .section-title-group {}
-  .section-eyebrow {
-    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
-    letter-spacing: 0.12em; color: var(--teal); margin-bottom: 8px;
-  }
-  .section-title {
-    font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 900; color: white;
-    line-height: 1.2;
-  }
-  .section-subtitle {
-    margin-top: 8px; font-size: 0.88rem; color: var(--text-muted);
-    max-width: 480px; line-height: 1.65;
-  }
-  .section-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 5px 14px; border-radius: 50px;
-    font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  .pill-teal { background: var(--teal-glow); border: 1px solid var(--border-teal); color: var(--teal); }
-
-  /* ── SECTION 1: Weekly Evolution ─────────────────────────────────────────── */
-  .weekly-section {
-    background: linear-gradient(180deg, #0D1B2A 0%, #0A1520 100%);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 64px;
-  }
-
-  /* Timeline layout */
-  .timeline-container {
-    position: relative;
-    padding-left: 40px;
-  }
-  .timeline-line {
-    position: absolute; left: 11px; top: 0; bottom: 0;
-    width: 2px;
-    background: linear-gradient(180deg, var(--teal) 0%, rgba(49,184,198,0.15) 100%);
-  }
-  .timeline-dot {
-    position: absolute; left: -32px; top: 22px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--teal); box-shadow: 0 0 0 3px rgba(49,184,198,0.25);
+  .stat-chip:first-child { padding-left: 0; }
+  .stat-chip:last-child { border-right: none; }
+  .stat-chip .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
     flex-shrink: 0;
   }
+  .stat-chip .dot.orange { background: var(--orange); }
+  .stat-chip .dot.yellow { background: var(--yellow); }
+  .stat-chip strong { color: #fff; }
+  .run-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(49,184,198,0.1);
+    border: 1px solid var(--border-teal);
+    color: var(--teal);
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: 'Mulish', sans-serif;
+    transition: all 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .run-btn:hover { background: rgba(49,184,198,0.2); color: #fff; border-color: var(--teal); }
 
-  /* Week card */
-  .week-card {
+  /* ─── Page header ───────────────────────────────────────────────────── */
+  .page-header {
+    background: linear-gradient(180deg, #060D14 0%, #0D1B2A 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 52px 24px 44px;
+    text-align: center;
+  }
+  .eyebrow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(49,184,198,0.1);
+    border: 1px solid var(--border-teal);
+    color: var(--teal);
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 22px;
+  }
+  .eyebrow-pill .pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  .page-header h1 {
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 14px;
+    line-height: 1.12;
+  }
+  .page-header h1 .accent { color: var(--teal); }
+  .page-header h1 .accent-orange { color: var(--orange); }
+  .page-header .sub {
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ─── Section wrapper ───────────────────────────────────────────────── */
+  .section-wrapper {
+    max-width: 1260px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ─── Section header ────────────────────────────────────────────────── */
+  .section-header {
+    padding: 56px 0 36px;
+  }
+  .section-header .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--teal);
+    margin-bottom: 14px;
+  }
+  .section-header .section-label .bar {
+    width: 22px;
+    height: 2px;
+    background: var(--teal);
+    border-radius: 2px;
+  }
+  .section-header h2 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  .section-header p {
+    color: var(--text-muted);
+    font-size: 0.94rem;
+    max-width: 640px;
+    line-height: 1.65;
+  }
+
+  /* ─── Horizontal stats row ──────────────────────────────────────────── */
+  .evolution-stats-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--card-bg-2);
+    border: 1px solid var(--border-teal);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .evo-stat {
+    flex: 1;
+    min-width: 180px;
+    padding: 18px 24px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .evo-stat:last-child { border-right: none; }
+  .evo-stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .evo-stat-icon.teal { background: rgba(49,184,198,0.15); }
+  .evo-stat-icon.orange { background: rgba(242,143,82,0.15); }
+  .evo-stat-icon.yellow { background: rgba(234,179,8,0.15); }
+  .evo-stat-body {}
+  .evo-stat-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .evo-stat-value.teal { color: var(--teal); }
+  .evo-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* ─── Timeline track ────────────────────────────────────────────────── */
+  .timeline-track {
     position: relative;
+    padding-left: 48px;
+    margin-bottom: 64px;
+  }
+  .timeline-track::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--teal) 0%, rgba(49,184,198,0.15) 100%);
+    border-radius: 2px;
+  }
+
+  /* ─── Timeline node dot ─────────────────────────────────────────────── */
+  .timeline-node {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .timeline-node::before {
+    content: '';
+    position: absolute;
+    left: -39px;
+    top: 22px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--teal);
+    border: 3px solid #0D1B2A;
+    box-shadow: 0 0 0 2px rgba(49,184,198,0.35);
+    z-index: 2;
+  }
+  .timeline-node.placeholder-node::before {
+    background: #1A2B3C;
+    border-color: rgba(49,184,198,0.4);
+    box-shadow: none;
+  }
+
+  /* ─── Baseline node ─────────────────────────────────────────────────── */
+  .baseline-node {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .baseline-node::before {
+    content: '';
+    position: absolute;
+    left: -39px;
+    top: 22px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--orange);
+    border: 3px solid #0D1B2A;
+    box-shadow: 0 0 0 2px rgba(242,143,82,0.35);
+    z-index: 2;
+  }
+
+  /* ─── Baseline active card ──────────────────────────────────────────── */
+  .baseline-card {
+    background: linear-gradient(135deg, #1A2B3C 0%, #152232 100%);
+    border: 1px solid rgba(242,143,82,0.35);
+    border-radius: 16px;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .baseline-left {}
+  .baseline-week-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+  .baseline-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .baseline-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .baseline-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(242,143,82,0.12);
+    border: 1px solid rgba(242,143,82,0.3);
+    color: var(--orange);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .baseline-badge .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 1.8s infinite;
+  }
+
+  /* ─── Placeholder "coming soon" card ────────────────────────────────── */
+  .placeholder-card {
+    border: 2px dashed rgba(49,184,198,0.25);
+    border-radius: 16px;
+    padding: 32px 36px;
+    background: rgba(49,184,198,0.025);
+    position: relative;
+    overflow: hidden;
+  }
+  .placeholder-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 18px,
+      rgba(49,184,198,0.025) 18px,
+      rgba(49,184,198,0.025) 36px
+    );
+    pointer-events: none;
+  }
+  .placeholder-inner {
+    position: relative;
+    z-index: 1;
+  }
+  .placeholder-week-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  .placeholder-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .placeholder-sub {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .placeholder-command {
+    display: inline-block;
+    background: #080F18;
+    border: 1px solid rgba(49,184,198,0.2);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.82rem;
+    color: var(--teal);
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+  }
+  .placeholder-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(49,184,198,0.07);
+    border: 1px solid rgba(49,184,198,0.15);
+    border-radius: 10px;
+    padding: 14px 18px;
+    max-width: 680px;
+  }
+  .placeholder-info .info-icon {
+    font-size: 0.95rem;
+    margin-top: 1px;
+    flex-shrink: 0;
+    color: var(--teal);
+  }
+  .placeholder-info .info-text {
+    font-size: 0.81rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .placeholder-info .info-text strong { color: #fff; font-weight: 700; }
+
+  /* ─── Population guide (future week card shape) ─────────────────────── */
+  .week-card-guide {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 28px 28px 24px;
-    margin-bottom: 24px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .week-card:hover {
-    border-color: var(--border-teal);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(49,184,198,0.1);
-  }
-
-  .week-card-header {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-  .week-number-badge {
-    background: var(--teal); color: #0D1B2A;
-    padding: 4px 14px; border-radius: 50px;
-    font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  .week-date-range {
-    font-size: 0.82rem; color: var(--text-muted); font-weight: 600;
-  }
-  .week-winner-badge {
-    background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.35);
-    color: #4ade80; padding: 3px 11px; border-radius: 50px;
-    font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
-  }
-
-  .week-section-label {
-    font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--teal); margin-bottom: 6px;
-  }
-  .week-hypothesis p {
-    font-size: 0.88rem; color: var(--text-mid); line-height: 1.65;
-    margin-bottom: 20px;
-  }
-
-  .week-metrics-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-    margin-bottom: 18px;
-  }
-  .week-metric {
-    background: rgba(255,255,255,0.035); border: 1px solid var(--border);
-    border-radius: 10px; padding: 12px 14px; text-align: center;
-  }
-  .wm-val { font-size: 1.2rem; font-weight: 800; color: white; }
-  .wm-lbl { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
-
-  .week-delta { margin-bottom: 20px; }
-  .week-delta p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
-  .week-delta strong { color: rgba(255,255,255,0.75); }
-
-  .week-view-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--teal-glow); border: 1px solid var(--border-teal);
-    color: var(--teal); padding: 10px 22px; border-radius: 10px;
-    font-size: 0.85rem; font-weight: 700; transition: all 0.2s;
-  }
-  .week-view-btn:hover { background: rgba(49,184,198,0.25); color: white; }
-
-  /* Coming-soon empty state */
-  .week-empty-state {
+    padding: 24px 28px;
+    margin-top: 40px;
+    opacity: 0.55;
+    pointer-events: none;
     position: relative;
-    background: var(--card-bg-2);
-    border: 1px dashed rgba(49,184,198,0.3);
-    border-radius: 16px;
-    padding: 44px 36px;
-    text-align: center;
-    margin-bottom: 24px;
   }
-  .week-empty-icon {
-    font-size: 2.4rem; margin-bottom: 16px; opacity: 0.6;
+  .week-card-guide::after {
+    content: 'Template — populated automatically by weekly_cycle.py';
+    position: absolute;
+    top: -11px;
+    left: 20px;
+    background: #0D1B2A;
+    padding: 0 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
   }
-  .week-empty-state h3 {
-    font-size: 1.1rem; font-weight: 800; color: rgba(255,255,255,0.6);
-    margin-bottom: 12px;
+  .week-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
   }
-  .week-empty-state p {
-    font-size: 0.88rem; color: var(--text-muted);
-    max-width: 540px; margin: 0 auto 20px; line-height: 1.7;
+  .week-card-meta {}
+  .week-card-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    margin-bottom: 4px;
   }
-  .week-empty-state .code-cmd {
-    display: inline-block;
-    background: rgba(0,0,0,0.4); border: 1px solid rgba(49,184,198,0.2);
-    color: var(--teal); padding: 8px 20px; border-radius: 8px;
-    font-family: 'Courier New', monospace; font-size: 0.82rem; font-weight: 700;
+  .week-card-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 2px;
   }
-  .week-empty-label {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: rgba(49,184,198,0.08); border: 1px dashed rgba(49,184,198,0.25);
-    color: rgba(49,184,198,0.6); padding: 4px 14px; border-radius: 50px;
-    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
-    letter-spacing: 0.08em; margin-bottom: 20px;
+  .week-card-hypothesis {
+    font-size: 0.83rem;
+    font-style: italic;
+    color: var(--text-muted);
   }
-  .week-1-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--teal); opacity: 0.5;
+  .week-card-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
+  .winner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(234,179,8,0.15);
+    border: 1px solid rgba(234,179,8,0.4);
+    color: #EAB308;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(49,184,198,0.1);
+    border: 1px solid var(--border-teal);
+    color: var(--teal);
+    padding: 7px 16px;
+    border-radius: 9px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+  .view-btn:hover { background: rgba(49,184,198,0.2); color: #fff; }
+  .week-card-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .metric-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--text-mid);
+  }
+  .metric-pill .pill-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .metric-pill .pill-val { color: #fff; }
+  .metric-pill .delta-up { color: var(--green); font-size: 0.7rem; }
+  .metric-pill .delta-down { color: var(--red); font-size: 0.7rem; }
+  .metric-pill.clarity { background: rgba(168,85,247,0.07); border-color: rgba(168,85,247,0.2); }
 
-  /* Timeline connector dot (empty state) */
-  .timeline-dot-empty {
-    position: absolute; left: -32px; top: 22px;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: rgba(49,184,198,0.25); border: 2px dashed rgba(49,184,198,0.4);
-  }
-
-  /* ── SECTION DIVIDER ─────────────────────────────────────────────────────── */
+  /* ─── Divider between sections ──────────────────────────────────────── */
   .section-divider {
-    border: none; border-top: 1px solid var(--border);
+    border: none;
+    border-top: 1px solid var(--border);
     margin: 0;
   }
 
-  /* ── SECTION 2: Hypothesis Library (collapsible) ─────────────────────────── */
+  /* ─── Library section ───────────────────────────────────────────────── */
   .library-section {
-    background: #0D1B2A;
-    padding-bottom: 80px;
+    background: #0A1622;
+  }
+  .library-section .section-header {
+    padding-bottom: 28px;
   }
 
-  /* Toggle / disclosure */
-  .library-toggle-bar {
-    display: flex; align-items: center; gap: 16px; cursor: pointer;
-    user-select: none;
-    padding: 14px 20px;
-    background: rgba(255,255,255,0.025); border: 1px solid var(--border);
-    border-radius: 12px; margin-bottom: 32px;
-    transition: background 0.2s;
-  }
-  .library-toggle-bar:hover { background: rgba(255,255,255,0.045); }
-  .toggle-chevron {
-    margin-left: auto; font-size: 0.9rem; color: var(--text-muted);
-    transition: transform 0.25s; flex-shrink: 0;
-  }
-  .toggle-chevron.open { transform: rotate(180deg); }
-  .toggle-bar-title {
-    font-size: 0.88rem; font-weight: 700; color: rgba(255,255,255,0.7);
-  }
-  .toggle-bar-count {
-    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
-    letter-spacing: 0.07em; color: var(--text-muted);
-    background: rgba(255,255,255,0.05); padding: 3px 10px; border-radius: 50px;
-  }
-
-  #library-grid-wrap {
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
-  }
-  #library-grid-wrap.collapsed {
-    max-height: 0 !important;
-    opacity: 0;
-  }
-
-  /* Library grid */
-  .library-grid {
+  /* ─── Version card grid ─────────────────────────────────────────────── */
+  .versions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    padding-bottom: 64px;
+  }
+  @media (max-width: 720px) {
+    .versions-grid { grid-template-columns: 1fr; }
+    .timeline-track { padding-left: 32px; }
+    .timeline-track::before { left: 11px; }
+    .timeline-node::before { left: -27px; }
+    .baseline-node::before { left: -27px; }
+    .timeline-node.placeholder-node::before { left: -27px; }
+    .evolution-stats-row { flex-direction: column; gap: 0; }
+    .evo-stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .evo-stat:last-child { border-bottom: none; }
   }
 
-  /* Library card — visually subordinate */
-  .lib-card {
-    background: var(--card-bg-2); border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden;
-    display: flex; flex-direction: column;
-    opacity: 0.88;
-    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-  }
-  .lib-card:hover { opacity: 1; transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
-
-  .lib-card-preview {
-    position: relative; height: 160px; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-  }
-  .lib-preview-label {
-    font-size: 3.2rem; font-weight: 900; color: rgba(255,255,255,0.06); user-select: none;
-  }
-  .lib-version-tag {
-    position: absolute; top: 12px; left: 12px;
-    padding: 4px 12px; border-radius: 50px;
-    font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  .lib-preview-overlay {
-    position: absolute; inset: 0; background: rgba(0,0,0,0);
-    transition: background 0.2s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .lib-card:hover .lib-preview-overlay { background: rgba(0,0,0,0.4); }
-  .lib-preview-btn {
-    opacity: 0; transform: scale(0.9); transition: all 0.2s;
-    background: white; color: #0D1B2A;
-    padding: 10px 24px; border-radius: 50px;
-    font-weight: 800; font-size: 0.88rem;
-  }
-  .lib-card:hover .lib-preview-btn { opacity: 1; transform: scale(1); }
-
-  .lib-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
-  .lib-card-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .lib-card-num { font-size: 0.7rem; font-weight: 800; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.08em; }
-  .lib-hyp-badge {
-    font-size: 0.68rem; font-weight: 700; padding: 3px 9px;
-    border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em;
-  }
-  .lib-card-body h3 { font-size: 1rem; font-weight: 800; color: rgba(255,255,255,0.85); line-height: 1.3; }
-  .lib-card-body .lib-desc { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
-
-  .lib-changes { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-  .lib-changes li {
-    display: flex; align-items: flex-start; gap: 7px;
-    font-size: 0.78rem; color: rgba(255,255,255,0.45); line-height: 1.5;
-  }
-  .lib-bullet {
-    width: 14px; height: 14px; min-width: 14px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.55rem; margin-top: 2px; font-weight: 900; color: white; flex-shrink: 0;
-  }
-
-  .lib-cta {
-    display: flex; gap: 8px; margin-top: auto; padding-top: 6px;
-  }
-  .lib-btn-primary {
-    flex: 1; display: flex; align-items: center; justify-content: center;
-    padding: 10px 14px; border-radius: 9px;
-    font-weight: 700; font-size: 0.82rem; color: white; transition: all 0.2s;
-    opacity: 0.85;
-  }
-  .lib-btn-primary:hover { opacity: 1; }
-  .lib-btn-secondary {
-    padding: 10px 14px; border-radius: 9px;
-    font-weight: 600; font-size: 0.78rem;
-    background: rgba(255,255,255,0.04);
-    color: rgba(255,255,255,0.4);
+  .version-card {
+    background: var(--card-bg);
     border: 1px solid var(--border);
-    transition: all 0.2s;
+    border-radius: 16px;
+    padding: 24px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   }
-  .lib-btn-secondary:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); }
-
-  /* Library version color schemes */
-  .lv1 .lib-card-preview { background: linear-gradient(155deg, #0d1b2a, #1a2b3c); }
-  .lv1 .lib-version-tag { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
-  .lv1 .lib-hyp-badge { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); }
-  .lv1 .lib-btn-primary { background: rgba(255,255,255,0.1); }
-  .lv1 .lib-bullet { background: rgba(255,255,255,0.18); }
-
-  .lv2 .lib-card-preview { background: linear-gradient(155deg, #0A2E3B, #0D3B4C, #2AA3B0); }
-  .lv2 .lib-version-tag { background: rgba(49,184,198,0.18); color: var(--teal); }
-  .lv2 .lib-hyp-badge { background: rgba(49,184,198,0.12); color: var(--teal); }
-  .lv2 .lib-btn-primary { background: var(--teal); }
-  .lv2 .lib-btn-primary:hover { background: var(--teal-dark); }
-  .lv2 .lib-bullet { background: var(--teal); }
-
-  .lv3 .lib-card-preview { background: linear-gradient(155deg, #14532d, #166534, #22c55e); }
-  .lv3 .lib-version-tag { background: rgba(34,197,94,0.18); color: var(--green); }
-  .lv3 .lib-hyp-badge { background: rgba(34,197,94,0.12); color: var(--green); }
-  .lv3 .lib-btn-primary { background: #16a34a; }
-  .lv3 .lib-btn-primary:hover { background: #15803d; }
-  .lv3 .lib-bullet { background: var(--green); }
-
-  .lv4 .lib-card-preview { background: linear-gradient(155deg, #1e3a5f, #1d4ed8, #3b82f6); }
-  .lv4 .lib-version-tag { background: rgba(59,130,246,0.18); color: var(--blue); }
-  .lv4 .lib-hyp-badge { background: rgba(59,130,246,0.12); color: var(--blue); }
-  .lv4 .lib-btn-primary { background: var(--blue); }
-  .lv4 .lib-btn-primary:hover { background: #2563eb; }
-  .lv4 .lib-bullet { background: var(--blue); }
-
-  .lv5 .lib-card-preview { background: linear-gradient(155deg, #3b0764, #6b21a8, #a855f7); }
-  .lv5 .lib-version-tag { background: rgba(168,85,247,0.18); color: var(--purple); }
-  .lv5 .lib-hyp-badge { background: rgba(168,85,247,0.12); color: var(--purple); }
-  .lv5 .lib-btn-primary { background: var(--purple); }
-  .lv5 .lib-btn-primary:hover { background: #9333ea; }
-  .lv5 .lib-bullet { background: var(--purple); }
-  .lv5 .lib-card { border-color: rgba(168,85,247,0.2); }
-  .rec-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.25); color: var(--purple); padding: 3px 10px; border-radius: 50px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
-
-  .lv6 .lib-card-preview { background: linear-gradient(145deg, #0d3b4c 0%, #1a5c6b 50%, #c06020 100%); }
-  .lv6 .lib-version-tag { background: rgba(242,143,82,0.18); color: var(--orange); }
-  .lv6 .lib-hyp-badge { background: rgba(242,143,82,0.12); color: var(--orange); }
-  .lv6 .lib-btn-primary { background: var(--orange); }
-  .lv6 .lib-btn-primary:hover { background: #E07A3D; }
-  .lv6 .lib-bullet { background: var(--orange); }
-  .lv6 .lib-card { border-color: rgba(242,143,82,0.15); }
-  .new-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(242,143,82,0.12); border: 1px solid rgba(242,143,82,0.25); color: var(--orange); padding: 3px 10px; border-radius: 50px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
-
-  .lv7 .lib-card-preview { background: linear-gradient(145deg, #0d3b4c 0%, #1a3a2a 60%, #2d6a4f 100%); }
-  .lv7 .lib-version-tag { background: rgba(34,197,94,0.18); color: #4ade80; }
-  .lv7 .lib-hyp-badge { background: rgba(34,197,94,0.12); color: #4ade80; }
-  .lv7 .lib-btn-primary { background: #16a34a; }
-  .lv7 .lib-btn-primary:hover { background: #15803d; }
-  .lv7 .lib-bullet { background: #16a34a; }
-  .lv7 .lib-card { border-color: rgba(34,197,94,0.15); }
-  .new-badge-green { display: inline-flex; align-items: center; gap: 5px; background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; padding: 3px 10px; border-radius: 50px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
-
-  /* ── Methodology box ─────────────────────────────────────────────────────── */
-  .methodology-section {
-    background: var(--card-bg-2); border: 1px solid var(--border);
-    border-radius: 16px; padding: 36px; margin-top: 48px;
+  .version-card:hover {
+    border-color: var(--border-teal);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
   }
-  .methodology-section h3 { font-size: 1rem; font-weight: 800; color: white; margin-bottom: 6px; }
-  .methodology-section .meth-lead { color: var(--text-muted); margin-bottom: 28px; font-size: 0.85rem; line-height: 1.6; }
-  .principles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
-  .principle { background: rgba(255,255,255,0.025); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
-  .principle-num { font-size: 0.68rem; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 7px; }
-  .principle h4 { font-size: 0.88rem; font-weight: 800; color: rgba(255,255,255,0.75); margin-bottom: 5px; }
-  .principle p { font-size: 0.78rem; color: rgba(255,255,255,0.35); line-height: 1.55; }
-
-  /* ── Footer ──────────────────────────────────────────────────────────────── */
-  .footer-note {
-    text-align: center; padding: 28px 24px;
-    font-size: 0.78rem; color: rgba(255,255,255,0.2);
+  .version-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .version-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(49,184,198,0.1);
+    border: 1px solid var(--border-teal);
+    color: var(--teal);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  .version-tag.control {
+    background: rgba(242,143,82,0.1);
+    border-color: rgba(242,143,82,0.3);
+    color: var(--orange);
+  }
+  .version-card-body {}
+  .version-name {
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .version-hypo {
+    font-size: 0.84rem;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .version-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 4px;
     border-top: 1px solid var(--border);
+    flex-wrap: wrap;
   }
+  .version-file {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .version-view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(49,184,198,0.08);
+    border: 1px solid var(--border-teal);
+    color: var(--teal);
+    padding: 7px 16px;
+    border-radius: 9px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .version-view-btn:hover { background: rgba(49,184,198,0.18); color: #fff; border-color: var(--teal); }
 
-  /* ── Responsive ──────────────────────────────────────────────────────────── */
-  @media (max-width: 860px) {
-    .library-grid { grid-template-columns: 1fr; }
-    .week-metrics-grid { grid-template-columns: repeat(2, 1fr); }
-    .stats-bar { flex-direction: column; align-items: flex-start; }
-    .stats-bar-items { gap: 12px; }
+  /* ─── Footer ────────────────────────────────────────────────────────── */
+  .page-footer {
+    background: var(--darker);
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
   }
-  @media (max-width: 560px) {
-    .timeline-container { padding-left: 24px; }
-    .timeline-dot, .timeline-dot-empty { left: -20px; }
-    .week-metrics-grid { grid-template-columns: repeat(2, 1fr); }
-  }
+  .page-footer strong { color: var(--text-mid); }
+  .page-footer .sep { margin: 0 8px; opacity: 0.4; }
 </style>
 </head>
 <body>
 
-<!-- ── Top stats bar ──────────────────────────────────────────────────────── -->
-<div class="stats-bar">
-  <div class="stats-bar-items">
-    <div class="stats-bar-item">
-      <div class="dot"></div>
-      <span><strong>7 versions</strong> in hypothesis library</span>
-    </div>
-    <div class="stats-bar-item">
-      <div class="dot orange"></div>
-      <span>Week <strong>0 (baseline)</strong> active — first live data collecting</span>
-    </div>
-    <div class="stats-bar-item">
-      <div class="dot"></div>
-      <span>Data: <strong>GA4</strong> + <strong>HubSpot</strong> + <strong>Clarity</strong></span>
-    </div>
-  </div>
-  <a href="../cro-analytics/README.md" class="run-btn" target="_blank">
-    <span class="run-btn-icon">&#9654;</span>
-    Run Weekly Cycle
+<!-- Preview URL Bar -->
+<div class="preview-bar">
+  <span class="label">Live&nbsp;Preview</span>
+  <span>→</span>
+  <a href="https://ccd69671.goodlife-landing-ab.pages.dev/versions/" target="_blank" rel="noopener">
+    https://ccd69671.goodlife-landing-ab.pages.dev/versions/
   </a>
 </div>
 
-<!-- ── Header ────────────────────────────────────────────────────────────── -->
-<div class="header">
-  <div class="header-eyebrow">&#9881;&nbsp; CRO Weekly Evolution</div>
-  <h1>The Good Life Bahamas<br><span class="accent">Landing Page Programme</span></h1>
-  <p class="sub">7 initial hypothesis versions + a living weekly iteration loop. Each week, real GA4 + HubSpot data drives a new version — the best-performing page becomes the base for the next.</p>
+<!-- Top Stats Bar -->
+<div class="stats-bar">
+  <div class="stats-bar-items">
+    <div class="stat-chip">
+      <span class="dot orange"></span>
+      <span><strong>Week 0 (Baseline)</strong> active</span>
+    </div>
+    <div class="stat-chip">
+      <span class="dot"></span>
+      <span><strong>7 versions</strong> in hypothesis library</span>
+    </div>
+    <div class="stat-chip">
+      <span class="dot yellow"></span>
+      <span>Data sources: <strong>GA4</strong> + <strong>HubSpot</strong> + <strong>Clarity</strong></span>
+    </div>
+  </div>
+  <button class="run-btn" onclick="void(0)">
+    <span>▶</span>
+    <span>python3 cro-analytics/weekly_cycle.py</span>
+  </button>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 1: Weekly Evolution                                            -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<div class="weekly-section">
+<!-- Page Header -->
+<div class="page-header">
+  <div class="eyebrow-pill">
+    <span class="pulse"></span>
+    Data-Driven CRO System
+  </div>
+  <h1>
+    CRO <span class="accent">Weekly</span> Evolution<br>
+    <span style="font-size:0.65em; font-weight:700; color:var(--text-muted);">The Good Life Bahamas</span>
+  </h1>
+  <p class="sub">
+    Two sections: a live weekly timeline driven by real data, and a reference library of initial hypotheses.
+    Every week, GA4 + HubSpot + Clarity automatically pick the next winning iteration.
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SECTION 1 — WEEKLY EVOLUTION
+════════════════════════════════════════════════════════════════════════ -->
+<section style="background: #0D1B2A;">
   <div class="section-wrapper">
+
     <div class="section-header">
-      <div class="section-title-group">
-        <div class="section-eyebrow">&#9654;&nbsp; Live Iteration Loop</div>
-        <div class="section-title">Weekly Evolution</div>
-        <div class="section-subtitle">Each week, the best-converting version becomes the base for the next iteration. Driven by GA4, HubSpot, and Clarity data.</div>
+      <div class="section-label">
+        <span class="bar"></span>
+        Section 1 of 2
       </div>
-      <span class="section-pill pill-teal">Auto-generated each Monday</span>
+      <h2>Weekly Evolution</h2>
+      <p>
+        Each week, real data from <strong style="color:#fff;">GA4, HubSpot &amp; Clarity</strong> drives the next iteration.
+        The script scores all 7 hypotheses against live sessions, bounce rate, inquiry rate, booking rate,
+        rage-click %, scroll depth, and quick-back % — then deploys the predicted winner automatically.
+      </p>
+    </div>
+
+    <!-- Horizontal stats row -->
+    <div class="evolution-stats-row">
+      <div class="evo-stat">
+        <div class="evo-stat-icon orange">📍</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value" style="color:var(--orange);">Week 0 Active</div>
+          <div class="evo-stat-label">Baseline running now</div>
+        </div>
+      </div>
+      <div class="evo-stat">
+        <div class="evo-stat-icon teal">🗂</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value teal">7 versions</div>
+          <div class="evo-stat-label">In hypothesis library</div>
+        </div>
+      </div>
+      <div class="evo-stat">
+        <div class="evo-stat-icon yellow">📊</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value" style="color:var(--yellow);">GA4 + HubSpot</div>
+          <div class="evo-stat-label">Sessions, bounce, inquiries, bookings</div>
+        </div>
+      </div>
+      <div class="evo-stat">
+        <div class="evo-stat-icon" style="background:rgba(168,85,247,0.15);">🖱</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value" style="color:#A855F7;">Clarity</div>
+          <div class="evo-stat-label">Rage-click, scroll depth, quick-back</div>
+        </div>
+      </div>
     </div>
 
     <!-- Timeline -->
-    <div class="timeline-container">
-      <div class="timeline-line"></div>
+    <div class="timeline-track">
 
-      <!-- ── Weekly cards are injected here by weekly_cycle.py ── -->
-      <!-- week-coming-soon-start -->
-      <div class="week-empty-state">
-        <div class="timeline-dot-empty"></div>
-        <div class="week-empty-label">
-          <div class="week-1-dot"></div>
-          Week 1 — Coming Soon
+      <!-- Week 0: Baseline (active) -->
+      <div class="baseline-node">
+        <div class="baseline-card">
+          <div class="baseline-left">
+            <div class="baseline-week-label">Week 0 · Baseline</div>
+            <div class="baseline-title">Control — All traffic split across v1–v7</div>
+            <div class="baseline-sub">Started: launch day &nbsp;·&nbsp; Collecting first 7 days of live data now</div>
+          </div>
+          <div class="baseline-badge">
+            <span class="live-dot"></span>
+            Live Now
+          </div>
         </div>
-        <div class="week-empty-icon">&#128200;</div>
-        <h3>Week 1 not yet generated</h3>
-        <p>Week 1 will be built after the first 7 days of live data from GA4, HubSpot &amp; Clarity. Run the command below to generate it once data is available.</p>
-        <div class="code-cmd">python3 cro-analytics/weekly_cycle.py</div>
       </div>
-      <!-- week-coming-soon-end -->
 
-      <!-- /weekly-evolution-cards -->
+      <!-- Week 1: Coming soon placeholder -->
+      <div class="timeline-node placeholder-node">
+        <div class="placeholder-card">
+          <div class="placeholder-inner">
+            <div class="placeholder-week-label">Week 1</div>
+            <div class="placeholder-title">Coming after first 7 days of live data</div>
+            <div class="placeholder-sub">
+              The script will score all 7 hypotheses against real sessions, bounce, inquiry rate,
+              booking rate, rage-click %, scroll depth, and quick-back % — then select and deploy the winner.
+            </div>
+            <div class="placeholder-command">Run: python3 cro-analytics/weekly_cycle.py</div>
+            <div class="placeholder-info">
+              <span class="info-icon">ℹ</span>
+              <span class="info-text">
+                The script pulls <strong>GA4</strong> sessions/bounce/events,
+                <strong>HubSpot</strong> inquiries/bookings, and
+                <strong>Clarity</strong> rage-click + scroll depth to pick the next hypothesis automatically.
+                Output is a new week card replacing this placeholder.
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    </div>
-  </div>
-</div>
+      <!-- Template guide (greyed out, shows future card structure) -->
+      <div class="timeline-node placeholder-node" style="margin-top:16px;">
+        <div class="week-card-guide">
+          <div class="week-card-top">
+            <div class="week-card-meta">
+              <div class="week-card-label">Week N · Mar 31–Apr 6 (example)</div>
+              <div class="week-card-title">v3 — Anxiety Reduction</div>
+              <div class="week-card-hypothesis">"Trust signals reduce hesitation"</div>
+            </div>
+            <div class="week-card-badges">
+              <span class="winner-badge">🏆 Winner</span>
+              <a href="#" class="view-btn">View Version ↗</a>
+            </div>
+          </div>
+          <div class="week-card-metrics">
+            <div class="metric-pill">
+              <span class="pill-label">Sessions</span>
+              <span class="pill-val">1,240</span>
+              <span class="delta-up">↑ 12%</span>
+            </div>
+            <div class="metric-pill">
+              <span class="pill-label">Bounce %</span>
+              <span class="pill-val">54%</span>
+              <span class="delta-down">↓ 6pts</span>
+            </div>
+            <div class="metric-pill">
+              <span class="pill-label">Inquiry Rate %</span>
+              <span class="pill-val">4.2%</span>
+              <span class="delta-up">↑ 0.8pts</span>
+            </div>
+            <div class="metric-pill">
+              <span class="pill-label">Booking Rate %</span>
+              <span class="pill-val">1.9%</span>
+              <span class="delta-up">↑ 0.3pts</span>
+            </div>
+            <div class="metric-pill clarity">
+              <span class="pill-label">Rage Click %</span>
+              <span class="pill-val">3.1%</span>
+              <span class="delta-down">↓ 1.2pts</span>
+            </div>
+            <div class="metric-pill clarity">
+              <span class="pill-label">Scroll Depth %</span>
+              <span class="pill-val">68%</span>
+              <span class="delta-up">↑ 9pts</span>
+            </div>
+            <div class="metric-pill clarity">
+              <span class="pill-label">Quick-Back %</span>
+              <span class="pill-val">18%</span>
+              <span class="delta-down">↓ 4pts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /timeline-track -->
+
+  </div><!-- /section-wrapper -->
+</section>
 
 <hr class="section-divider">
 
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<!-- SECTION 2: Initial Hypothesis Library                                  -->
-<!-- ═══════════════════════════════════════════════════════════════════════ -->
-<div class="library-section">
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SECTION 2 — HYPOTHESIS LIBRARY
+════════════════════════════════════════════════════════════════════════ -->
+<section class="library-section">
   <div class="section-wrapper">
+
     <div class="section-header">
-      <div class="section-title-group">
-        <div class="section-eyebrow">&#128218;&nbsp; Reference Versions</div>
-        <div class="section-title">Initial Hypothesis Library</div>
-        <div class="section-subtitle">v1 through v7 — the original 7 one-hypothesis-per-version tests built before live data. These inform the weekly evolution but are not actively iterated on.</div>
+      <div class="section-label">
+        <span class="bar" style="background:var(--orange);"></span>
+        <span style="color:var(--orange);">Section 2 of 2</span>
       </div>
-      <span class="section-pill pill-teal">v1 &ndash; v7 &mdash; 7 versions</span>
+      <h2>Initial Hypothesis Library — <span style="color:var(--orange);">v1 through v7</span></h2>
+      <p>
+        Reference versions built before live data. Used as base templates for weekly iterations.
+        The weekly script scores these hypotheses against real metrics and selects the deployment candidate.
+      </p>
     </div>
 
-    <!-- Collapse/expand toggle -->
-    <div class="library-toggle-bar" id="lib-toggle" onclick="toggleLibrary()" role="button" aria-expanded="true" aria-controls="library-grid-wrap">
-      <span class="toggle-bar-title">Initial Hypothesis Library &mdash; v1 through v7</span>
-      <span class="toggle-bar-count">7 reference versions</span>
-      <span class="toggle-chevron open" id="toggle-chevron">&#9660;</span>
-    </div>
+    <div class="versions-grid">
 
-    <div id="library-grid-wrap" style="max-height: 9999px; opacity: 1;">
-      <div class="library-grid">
-
-        <!-- V1 -->
-        <div class="lv1">
-          <div class="lib-card">
-            <div class="lib-card-preview">
-              <div class="lib-preview-label">V1</div>
-              <div class="lib-version-tag">v1 &mdash; Baseline</div>
-              <a href="v1.html" target="_blank" class="lib-preview-overlay">
-                <div class="lib-preview-btn">View Version &#8599;</div>
-              </a>
-            </div>
-            <div class="lib-card-body">
-              <div class="lib-card-meta">
-                <span class="lib-card-num">Version 1 of 7</span>
-                <span class="lib-hyp-badge">Control</span>
-              </div>
-              <h3>Current Baseline</h3>
-              <p class="lib-desc">The original landing page saved as-is. Control against which all versions are measured.</p>
-              <ul class="lib-changes">
-                <li><div class="lib-bullet">—</div> Split hero layout (content + image grid)</li>
-                <li><div class="lib-bullet">—</div> Two CTAs: "Start Planning" + "Browse Properties"</li>
-                <li><div class="lib-bullet">—</div> Generic headline, no pricing transparency</li>
-                <li><div class="lib-bullet">—</div> Hard-sell CTAs: "Check Availability", "Book Your Stay"</li>
-              </ul>
-              <div class="lib-cta">
-                <a href="v1.html" target="_blank" class="lib-btn-primary">Open Version 1</a>
-                <div class="lib-btn-secondary">Baseline</div>
-              </div>
-            </div>
-          </div>
+      <!-- V1 -->
+      <div class="version-card">
+        <div class="version-card-top">
+          <span class="version-tag control">V1 · Control</span>
         </div>
-
-        <!-- V2 -->
-        <div class="lv2">
-          <div class="lib-card">
-            <div class="lib-card-preview">
-              <div class="lib-preview-label">V2</div>
-              <div class="lib-version-tag">v2 &mdash; Hero</div>
-              <a href="v2-above-fold.html" target="_blank" class="lib-preview-overlay">
-                <div class="lib-preview-btn">View Version &#8599;</div>
-              </a>
-            </div>
-            <div class="lib-card-body">
-              <div class="lib-card-meta">
-                <span class="lib-card-num">Version 2 of 7</span>
-                <span class="lib-hyp-badge">Above-the-fold test</span>
-              </div>
-              <h3>Above-the-Fold Optimization</h3>
-              <p class="lib-desc">Hypothesis: A benefit-driven headline + full-bleed hero + single CTA + credibility cluster will increase hero-to-scroll and CTA click rate.</p>
-              <ul class="lib-changes">
-                <li><div class="lib-bullet">&#10003;</div> Sensory headline: "Wake up to turquoise water"</li>
-                <li><div class="lib-bullet">&#10003;</div> Single CTA — removed secondary "Browse" button</li>
-                <li><div class="lib-bullet">&#10003;</div> Credibility cluster below CTA at click-decision moment</li>
-                <li><div class="lib-bullet">&#10003;</div> Full-bleed centered hero (less cognitive load)</li>
-              </ul>
-              <div class="lib-cta">
-                <a href="v2-above-fold.html" target="_blank" class="lib-btn-primary">Open Version 2</a>
-                <div class="lib-btn-secondary">Hero test</div>
-              </div>
-            </div>
-          </div>
+        <div class="version-card-body">
+          <div class="version-name">Baseline (Control)</div>
+          <div class="version-hypo">Original site. Control group. All subsequent versions are measured against this baseline.</div>
         </div>
-
-        <!-- V3 -->
-        <div class="lv3">
-          <div class="lib-card">
-            <div class="lib-card-preview">
-              <div class="lib-preview-label">V3</div>
-              <div class="lib-version-tag">v3 &mdash; Trust</div>
-              <a href="v3-anxiety-reduction.html" target="_blank" class="lib-preview-overlay">
-                <div class="lib-preview-btn">View Version &#8599;</div>
-              </a>
-            </div>
-            <div class="lib-card-body">
-              <div class="lib-card-meta">
-                <span class="lib-card-num">Version 3 of 7</span>
-                <span class="lib-hyp-badge">Anxiety reduction test</span>
-              </div>
-              <h3>Anxiety Reduction</h3>
-              <p class="lib-desc">Hypothesis: Proactively addressing pricing, cancellation, and support fears will reduce drop-off and increase inquiry rate.</p>
-              <ul class="lib-changes">
-                <li><div class="lib-bullet">&#10003;</div> Pricing anchor: "Starting from $850/night · No booking fees"</li>
-                <li><div class="lib-bullet">&#10003;</div> "What's Included" green trust strip below search bar</li>
-                <li><div class="lib-bullet">&#10003;</div> FAQ: top 6 guest anxieties above final CTA</li>
-                <li><div class="lib-bullet">&#10003;</div> Review-mined copy: "like having a local friend"</li>
-              </ul>
-              <div class="lib-cta">
-                <a href="v3-anxiety-reduction.html" target="_blank" class="lib-btn-primary">Open Version 3</a>
-                <div class="lib-btn-secondary">Trust test</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- V4 -->
-        <div class="lv4">
-          <div class="lib-card">
-            <div class="lib-card-preview">
-              <div class="lib-preview-label">V4</div>
-              <div class="lib-version-tag">v4 &mdash; Soft CTA</div>
-              <a href="v4-soft-cta.html" target="_blank" class="lib-preview-overlay">
-                <div class="lib-preview-btn">View Version &#8599;</div>
-              </a>
-            </div>
-            <div class="lib-card-body">
-              <div class="lib-card-meta">
-                <span class="lib-card-num">Version 4 of 7</span>
-                <span class="lib-hyp-badge">CTA friction test</span>
-              </div>
-              <h3>Lower-Commitment CTAs</h3>
-              <p class="lib-desc">Hypothesis: Replacing hard-sell CTAs with exploratory language will remove friction and increase funnel entry rate.</p>
-              <ul class="lib-changes">
-                <li><div class="lib-bullet">&#10003;</div> All CTAs softened: "Explore Collection" / "See Details"</li>
-                <li><div class="lib-bullet">&#10003;</div> 2-field form: Name + Email only</li>
-                <li><div class="lib-bullet">&#10003;</div> Sticky bottom bar — persistent but dismissible</li>
-                <li><div class="lib-bullet">&#10003;</div> Section copy reframed as exploration, not commitment</li>
-              </ul>
-              <div class="lib-cta">
-                <a href="v4-soft-cta.html" target="_blank" class="lib-btn-primary">Open Version 4</a>
-                <div class="lib-btn-secondary">Friction test</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- V5 -->
-        <div class="lv5">
-          <div class="lib-card">
-            <div class="lib-card-preview">
-              <div class="lib-preview-label">V5</div>
-              <div class="lib-version-tag">v5 &mdash; Best</div>
-              <a href="v5-best-combined.html" target="_blank" class="lib-preview-overlay">
-                <div class="lib-preview-btn">View Version &#8599;</div>
-              </a>
-            </div>
-            <div class="lib-card-body">
-              <div class="lib-card-meta">
-                <span class="lib-card-num">Version 5 of 7</span>
-                <span class="lib-hyp-badge">Best combined</span>
-                <span class="rec-badge">&#11088; Default base</span>
-              </div>
-              <h3>Best Combined — Ultimate Version</h3>
-              <p class="lib-desc">Winners from v2, v3 &amp; v4 combined. The default starting point for Week 1 of the evolution loop.</p>
-              <ul class="lib-changes">
-                <li><div class="lib-bullet">&#10003;</div> <strong style="color:rgba(255,255,255,0.65)">From v2:</strong> Sensory headline + single CTA + centered hero</li>
-                <li><div class="lib-bullet">&#10003;</div> <strong style="color:rgba(255,255,255,0.65)">From v3:</strong> Pricing anchor + trust strip + FAQ</li>
-                <li><div class="lib-bullet">&#10003;</div> <strong style="color:rgba(255,255,255,0.65)">From v4:</strong> Soft CTA language + 2-field form + sticky bar</li>
-              </ul>
-              <div class="lib-cta">
-                <a href="v5-best-combined.html" target="_blank" class="lib-btn-primary">Open Version 5 &#11088;</a>
-                <div class="lib-btn-secondary">Recommended</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- V6 -->
-        <div class="lv6">
-          <div class="lib-card">
-            <div class="lib-card-preview">
-              <div class="lib-preview-label">V6</div>
-              <div class="lib-version-tag">v6 &mdash; Problem/Solution</div>
-              <a href="v6-problem-solution.html" target="_blank" class="lib-preview-overlay">
-                <div class="lib-preview-btn">View Version &#8599;</div>
-              </a>
-            </div>
-            <div class="lib-card-body">
-              <div class="lib-card-meta">
-                <span class="lib-card-num">Version 6 of 7</span>
-                <span class="lib-hyp-badge">Hero framing test</span>
-                <span class="new-badge">&#9733; New</span>
-              </div>
-              <h3>Problem / Solution Hero</h3>
-              <p class="lib-desc">Hypothesis: Framing the hero around the visitor's pain point before presenting the solution creates stronger resonance and higher intent to scroll.</p>
-              <ul class="lib-changes">
-                <li><div class="lib-bullet">&#10003;</div> Right hero column: inline Problem + Solution headlines</li>
-                <li><div class="lib-bullet">&#10003;</div> Shorter hero (82vh) so search bar visible above fold</li>
-                <li><div class="lib-bullet">&#10003;</div> Builds on v4 soft-CTA framework throughout</li>
-              </ul>
-              <div class="lib-cta">
-                <a href="v6-problem-solution.html" target="_blank" class="lib-btn-primary">Open Version 6</a>
-                <div class="lib-btn-secondary">New</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- V7 -->
-        <div class="lv7">
-          <div class="lib-card">
-            <div class="lib-card-preview">
-              <div class="lib-preview-label">V7</div>
-              <div class="lib-version-tag">v7 &mdash; Trust &amp; Local</div>
-              <a href="v7-trust-local.html" target="_blank" class="lib-preview-overlay">
-                <div class="lib-preview-btn">View Version &#8599;</div>
-              </a>
-            </div>
-            <div class="lib-card-body">
-              <div class="lib-card-meta">
-                <span class="lib-card-num">Version 7 of 7</span>
-                <span class="lib-hyp-badge">Trust arbitrage test</span>
-                <span class="new-badge-green">&#9733; New</span>
-              </div>
-              <h3>Trust &amp; Local Authority</h3>
-              <p class="lib-desc">Hypothesis: Surfacing the hidden Airbnb anxiety and resolving it with local certainty signals will increase inquiry rate vs. purely aspirational framing.</p>
-              <ul class="lib-changes">
-                <li><div class="lib-bullet">&#10003;</div> Hero: "Too important to leave to chance" — trust-first framing</li>
-                <li><div class="lib-bullet">&#10003;</div> "The Risk" vs "The Certainty" — Airbnb anxiety surfaced directly</li>
-                <li><div class="lib-bullet">&#10003;</div> Mid-page comparison table: listing platforms vs. The Good Life</li>
-                <li><div class="lib-bullet">&#10003;</div> Testimonials curated for reliability, not just "great views"</li>
-              </ul>
-              <div class="lib-cta">
-                <a href="v7-trust-local.html" target="_blank" class="lib-btn-primary">Open Version 7</a>
-                <div class="lib-btn-secondary">New</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /library-grid -->
-
-      <!-- Methodology reference -->
-      <div class="methodology-section">
-        <h3>Arsh Sanwarwala / ThrillX &mdash; CRO Principles Applied</h3>
-        <p class="meth-lead">Each initial version tests exactly one hypothesis. The weekly evolution combines live data with these principles to iterate continuously.</p>
-        <div class="principles-grid">
-          <div class="principle">
-            <div class="principle-num">Principle 1</div>
-            <h4>Above the fold is everything</h4>
-            <p>Headline + hero tests produce 50%+ conversion swings. Tested in v2.</p>
-          </div>
-          <div class="principle">
-            <div class="principle-num">Principle 2</div>
-            <h4>Lower-commitment CTAs win</h4>
-            <p>"Learn More" beat "Book A Call" and drove 385% more booked calls. Tested in v4.</p>
-          </div>
-          <div class="principle">
-            <div class="principle-num">Principle 3</div>
-            <h4>Fewer CTAs = better</h4>
-            <p>Cutting from two CTAs to one produces measurable lifts. Applied in v2 and v4.</p>
-          </div>
-          <div class="principle">
-            <div class="principle-num">Principle 4</div>
-            <h4>Address visitor anxieties directly</h4>
-            <p>Pricing transparency, cancellation policy, what's included. Tested in v3.</p>
-          </div>
-          <div class="principle">
-            <div class="principle-num">Principle 5</div>
-            <h4>Review mining</h4>
-            <p>Real guest language in copy. Applied in v3/v5: "like a cool cousin who knows everyone."</p>
-          </div>
-          <div class="principle">
-            <div class="principle-num">Principle 6</div>
-            <h4>Shorter forms</h4>
-            <p>Remove every non-essential field. Tested in v4: name + email only.</p>
-          </div>
-          <div class="principle">
-            <div class="principle-num">Principle 7</div>
-            <h4>One hypothesis per version</h4>
-            <p>Isolate the variable, measure the result, combine the winners.</p>
-          </div>
-          <div class="principle">
-            <div class="principle-num">Framework</div>
-            <h4>"Beauty and Brains"</h4>
-            <p>Professional visual design + data-driven optimisation. Both matter together.</p>
-          </div>
+        <div class="version-card-footer">
+          <span class="version-file">v1.html</span>
+          <a href="v1.html" class="version-view-btn">View Version ↗</a>
         </div>
       </div>
 
-    </div><!-- /library-grid-wrap -->
+      <!-- V2 -->
+      <div class="version-card">
+        <div class="version-card-top">
+          <span class="version-tag">V2</span>
+        </div>
+        <div class="version-card-body">
+          <div class="version-name">Above-Fold Focus</div>
+          <div class="version-hypo">Move the CTA above the fold hypothesis — if visitors see the call-to-action immediately without scrolling, inquiry rate increases.</div>
+        </div>
+        <div class="version-card-footer">
+          <span class="version-file">v2-above-fold.html</span>
+          <a href="v2-above-fold.html" class="version-view-btn">View Version ↗</a>
+        </div>
+      </div>
+
+      <!-- V3 -->
+      <div class="version-card">
+        <div class="version-card-top">
+          <span class="version-tag">V3</span>
+        </div>
+        <div class="version-card-body">
+          <div class="version-name">Anxiety Reduction</div>
+          <div class="version-hypo">Trust signals reduce hesitation — adding reviews, certifications, and cancellation policy prominently decreases bounce and increases bookings.</div>
+        </div>
+        <div class="version-card-footer">
+          <span class="version-file">v3-anxiety-reduction.html</span>
+          <a href="v3-anxiety-reduction.html" class="version-view-btn">View Version ↗</a>
+        </div>
+      </div>
+
+      <!-- V4 -->
+      <div class="version-card">
+        <div class="version-card-top">
+          <span class="version-tag">V4</span>
+        </div>
+        <div class="version-card-body">
+          <div class="version-name">Soft CTA</div>
+          <div class="version-hypo">Lower-commitment call to action — replacing "Book Now" with "Check Availability" reduces friction and lifts inquiry rate among hesitant visitors.</div>
+        </div>
+        <div class="version-card-footer">
+          <span class="version-file">v4-soft-cta.html</span>
+          <a href="v4-soft-cta.html" class="version-view-btn">View Version ↗</a>
+        </div>
+      </div>
+
+      <!-- V5 -->
+      <div class="version-card">
+        <div class="version-card-top">
+          <span class="version-tag">V5</span>
+        </div>
+        <div class="version-card-body">
+          <div class="version-name">Best Combined</div>
+          <div class="version-hypo">Best elements from v2, v3, v4 — above-fold CTA + trust signals + soft commitment language combined outperforms any single variant.</div>
+        </div>
+        <div class="version-card-footer">
+          <span class="version-file">v5-best-combined.html</span>
+          <a href="v5-best-combined.html" class="version-view-btn">View Version ↗</a>
+        </div>
+      </div>
+
+      <!-- V6 -->
+      <div class="version-card">
+        <div class="version-card-top">
+          <span class="version-tag">V6</span>
+        </div>
+        <div class="version-card-body">
+          <div class="version-name">Problem / Solution</div>
+          <div class="version-hypo">Problem headline + Solution headline in hero — framing the visitor's pain (bad Airbnb experiences) before positioning The Good Life as the answer increases engagement.</div>
+        </div>
+        <div class="version-card-footer">
+          <span class="version-file">v6-problem-solution.html</span>
+          <a href="v6-problem-solution.html" class="version-view-btn">View Version ↗</a>
+        </div>
+      </div>
+
+      <!-- V7 -->
+      <div class="version-card">
+        <div class="version-card-top">
+          <span class="version-tag">V7</span>
+        </div>
+        <div class="version-card-body">
+          <div class="version-name">Trust &amp; Local Authority</div>
+          <div class="version-hypo">Airbnb-doubt framing + comparison table + 0 cancellations — directly addressing why a dedicated villa beats Airbnb builds local authority and drives higher-quality inquiries.</div>
+        </div>
+        <div class="version-card-footer">
+          <span class="version-file">v7-trust-local.html</span>
+          <a href="v7-trust-local.html" class="version-view-btn">View Version ↗</a>
+        </div>
+      </div>
+
+    </div><!-- /versions-grid -->
+
   </div><!-- /section-wrapper -->
-</div><!-- /library-section -->
+</section>
 
-<div class="footer-note">
-  The Good Life Bahamas Rentals &mdash; CRO Weekly Evolution Programme &middot; 7 initial versions &middot; Weekly data-driven iteration &middot; Arsh Sanwarwala / ThrillX methodology
-</div>
-
-<script>
-(function() {
-  var wrap    = document.getElementById('library-grid-wrap');
-  var chevron = document.getElementById('toggle-chevron');
-  var toggle  = document.getElementById('lib-toggle');
-  var open    = true;
-
-  function setOpen(val) {
-    open = val;
-    if (open) {
-      wrap.style.maxHeight = wrap.scrollHeight + 'px';
-      wrap.style.opacity   = '1';
-      wrap.classList.remove('collapsed');
-      chevron.classList.add('open');
-      toggle.setAttribute('aria-expanded', 'true');
-    } else {
-      wrap.style.maxHeight = wrap.scrollHeight + 'px'; // pin before transition
-      requestAnimationFrame(function() {
-        wrap.style.maxHeight = '0px';
-        wrap.style.opacity   = '0';
-        chevron.classList.remove('open');
-        toggle.setAttribute('aria-expanded', 'false');
-      });
-    }
-  }
-
-  // Initialise height for transition
-  wrap.style.maxHeight = wrap.scrollHeight + 'px';
-
-  window.toggleLibrary = function() { setOpen(!open); };
-})();
-</script>
+<!-- Footer -->
+<footer class="page-footer">
+  <strong>The Good Life Bahamas</strong>
+  <span class="sep">·</span>
+  CRO Weekly Evolution System
+  <span class="sep">·</span>
+  Week 0 Baseline Active
+  <span class="sep">·</span>
+  Data: GA4 + HubSpot + Clarity
+</footer>
 
 </body>
 </html>
