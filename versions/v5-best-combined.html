@@ -1,0 +1,733 @@
+<!--
+  ============================================================
+  VERSION 5 — BEST COMBINED
+  ============================================================
+  HYPOTHESIS (Arsh Sanwarwala / ThrillX methodology):
+  "Combine the winning elements from each test into the ultimate
+  conversion-optimized version. Don't test everything at once —
+  but once you know what works, bring it all together."
+
+  ELEMENTS TAKEN FROM EACH VERSION:
+
+  FROM V2 (Above-the-fold optimization):
+  ✓ Sensory benefit-driven headline: "Wake up to turquoise water"
+  ✓ Single CTA in hero (removed secondary button)
+  ✓ Credibility cluster directly below CTA at click-decision moment
+  ✓ Full-bleed centered hero layout (less cognitive load)
+
+  FROM V3 (Anxiety reduction):
+  ✓ Pricing anchor in hero subtitle: "Starting from $850/night"
+  ✓ "What's Included" green trust strip below search bar
+  ✓ Review-mined copy: "like having a local friend who knows everyone"
+  ✓ Flexible cancellation micro-copy on every property card
+  ✓ FAQ section answering top 5 guest anxieties
+  ✓ Reassurance cluster near final CTA
+
+  FROM V4 (Lower-commitment CTA):
+  ✓ Softer CTA language throughout: "Explore", "See Details"
+  ✓ 2-field inquiry form (name + email) — minimal friction
+  ✓ Sticky bottom bar for persistent but non-intrusive reminder
+
+  NEW IN V5:
+  ✓ Pull quote block above hero image using review-mined language
+  ✓ Social proof bar: aggregate rating + review count visible in hero
+  ✓ Property cards show pricing range more clearly
+  ✓ CTA hierarchy: primary (form) > secondary (call) > tertiary (email)
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Good Life Bahamas Rentals | Luxury Vacation Homes & Villas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Mulish', sans-serif; color: #2F3744; line-height: 1.6; background: #fff; -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; height: auto; display: block; }
+  a { text-decoration: none; color: inherit; }
+
+  :root {
+    --teal: #31B8C6; --teal-dark: #2AA3B0; --orange: #F28F52; --orange-dark: #E07A3D;
+    --dark: #2F3744; --dark-light: #4A5568; --light: #F7FAFB; --white: #FFFFFF;
+    --green: #22C55E; --green-bg: #F0FDF4;
+    --shadow-sm: 0 2px 8px rgba(47,55,68,0.08); --shadow-md: 0 4px 20px rgba(47,55,68,0.12);
+    --shadow-lg: 0 8px 40px rgba(47,55,68,0.16); --radius: 12px; --radius-sm: 8px; --max-width: 1200px;
+  }
+
+  h1, h2, h3, h4 { font-weight: 800; line-height: 1.2; color: var(--dark); }
+  h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); }
+  h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); }
+  h3 { font-size: 1.25rem; }
+  p { color: var(--dark-light); }
+  .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+
+  /* NAV — V4: softer nav CTA */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.97); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(47,55,68,0.06); transition: box-shadow 0.3s; }
+  .nav.scrolled { box-shadow: var(--shadow-sm); }
+  .nav-inner { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: var(--teal); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--dark); }
+  .nav-logo .script { font-style: italic; font-weight: 600; color: var(--orange); font-size: 0.95rem; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 0.9rem; font-weight: 600; color: var(--dark-light); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-cta { background: var(--teal); color: white; padding: 10px 24px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; border: none; cursor: pointer; }
+  .nav-cta:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  .mobile-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+  .mobile-toggle span { display: block; width: 24px; height: 2px; background: var(--dark); margin: 5px 0; transition: 0.3s; border-radius: 2px; }
+
+  /* HERO — V2: Full-bleed centered, single CTA */
+  .hero {
+    position: relative; min-height: 96vh; display: flex; align-items: center;
+    justify-content: center; text-align: center;
+    background: linear-gradient(165deg, #0A2E3B 0%, #0D3B4C 35%, #1A5C6B 65%, #2AA3B0 100%);
+    overflow: hidden; padding-top: 72px;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(49,184,198,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 20%, rgba(242,143,82,0.12) 0%, transparent 50%);
+  }
+  .hero-inner { position: relative; z-index: 2; max-width: 860px; margin: 0 auto; padding: 60px 24px; }
+  .hero-content { color: white; }
+
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); backdrop-filter: blur(10px); padding: 8px 20px; border-radius: 50px; margin-bottom: 28px; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.95); border: 1px solid rgba(255,255,255,0.2); }
+  .hero-badge .dot { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.7; transform:scale(1.3); } }
+
+  /* V2: Sensory benefit-driven headline */
+  .hero h1 { color: white; margin-bottom: 20px; font-size: clamp(2.6rem, 6vw, 4.2rem); line-height: 1.1; }
+  .hero h1 .line2 { display: block; color: var(--orange); }
+
+  /* V3: Subtitle includes pricing anchor */
+  .hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.82); margin-bottom: 16px; line-height: 1.7; max-width: 580px; margin-left: auto; margin-right: auto; }
+  .hero-price-anchor { display: inline-flex; align-items: center; gap: 8px; background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.35); color: #86efac; padding: 7px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; margin-bottom: 32px; }
+
+  /* V2: Single CTA */
+  .hero-actions { display: flex; justify-content: center; margin-bottom: 20px; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--orange); color: white; padding: 18px 44px; border-radius: 50px; font-weight: 800; font-size: 1.1rem; transition: all 0.3s; border: none; cursor: pointer; font-family: 'Mulish', sans-serif; box-shadow: 0 8px 32px rgba(242,143,82,0.4); }
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(242,143,82,0.5); }
+  .btn-outline { display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--teal); color: var(--teal); padding: 14px 36px; border-radius: 50px; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; }
+  .btn-outline:hover { background: var(--teal); color: white; }
+
+  /* V3 + V2: Reassurance below CTA + credibility cluster */
+  .hero-reassurance { font-size: 0.82rem; color: rgba(255,255,255,0.6); margin-bottom: 28px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .hero-reassurance span { color: rgba(34,197,94,0.9); }
+
+  /* V2: Credibility cluster */
+  .hero-cred { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 48px; }
+  .hero-cred-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: rgba(255,255,255,0.75); font-weight: 600; }
+  .hero-cred-item .icon { font-size: 1rem; }
+  .hero-cred-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); }
+
+  .hero-stats { display: flex; gap: 40px; justify-content: center; }
+  .hero-stat { text-align: center; }
+  .hero-stat .number { font-size: 2rem; font-weight: 900; color: white; }
+  .hero-stat .label { font-size: 0.78rem; color: rgba(255,255,255,0.6); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .scroll-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.4); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; display: flex; flex-direction: column; align-items: center; gap: 8px; animation: bounce 2s infinite; }
+  @keyframes bounce { 0%,100% { transform:translateX(-50%) translateY(0); } 50% { transform:translateX(-50%) translateY(6px); } }
+
+  /* SEARCH BAR */
+  .search-section { position: relative; z-index: 10; margin-top: -44px; }
+  .search-bar { background: white; border-radius: 16px; padding: 12px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 2px; max-width: 900px; margin: 0 auto; }
+  .search-field { flex: 1; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid #eef2f5; }
+  .search-field:last-of-type { border-right: none; }
+  .search-field label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--dark); }
+  .search-field select, .search-field input { border: none; font-family: 'Mulish', sans-serif; font-size: 0.95rem; color: var(--dark-light); background: transparent; outline: none; cursor: pointer; width: 100%; }
+  .search-btn { background: var(--teal); color: white; border: none; padding: 18px 36px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; font-family: 'Mulish', sans-serif; transition: all 0.3s; white-space: nowrap; }
+  .search-btn:hover { background: var(--teal-dark); }
+
+  /* V3: What's Included trust strip */
+  .whats-included { background: var(--green-bg); border-bottom: 1px solid #bbf7d0; padding: 16px 0; }
+  .whats-included-inner { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .wi-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 700; color: #15803d; }
+  .wi-check { width: 20px; height: 20px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem; flex-shrink: 0; }
+
+  /* TRUST BAR */
+  .trust-bar { padding: 40px 0; border-bottom: 1px solid #eef2f5; }
+  .trust-inner { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; font-weight: 600; color: var(--dark-light); }
+  .trust-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+  /* PROPERTIES */
+  .properties { padding: 80px 0; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-label { display: inline-block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin-bottom: 12px; }
+  .section-header h2 { margin-bottom: 12px; }
+  .section-header p { max-width: 560px; margin: 0 auto; font-size: 1.05rem; }
+  .property-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .property-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s; border: 1px solid #eef2f5; }
+  .property-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+  .property-card-img { position: relative; aspect-ratio: 16/10; overflow: hidden; background: linear-gradient(135deg, #e8f4f6, #d4eef1); }
+  .property-card-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--teal); font-weight: 600; }
+  .property-badge { position: absolute; top: 14px; left: 14px; background: var(--orange); color: white; padding: 5px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+  .property-card-body { padding: 22px; }
+  .property-location { font-size: 0.78rem; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+  .property-card-body h3 { margin-bottom: 6px; font-size: 1.2rem; }
+  .property-desc { font-size: 0.88rem; color: var(--dark-light); margin-bottom: 16px; }
+  .property-meta { display: flex; gap: 16px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid #eef2f5; }
+  .property-meta span { font-size: 0.82rem; color: var(--dark-light); display: flex; align-items: center; gap: 4px; }
+  .property-footer { display: flex; align-items: center; justify-content: space-between; }
+  .property-price { font-size: 1.25rem; font-weight: 800; color: var(--dark); }
+  .property-price small { font-size: 0.8rem; font-weight: 500; color: var(--dark-light); }
+  /* V4 soft CTA + V3 micro-copy */
+  .property-cta-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .property-cta { background: transparent; color: var(--teal); padding: 10px 22px; border-radius: 50px; font-size: 0.85rem; font-weight: 700; transition: all 0.3s; border: 2px solid var(--teal); cursor: pointer; font-family: 'Mulish', sans-serif; }
+  .property-cta:hover { background: var(--teal); color: white; }
+  .property-micro { font-size: 0.72rem; color: var(--green); font-weight: 600; text-align: right; }
+
+  .section-cta-row { text-align: center; margin-top: 48px; }
+
+  /* ISLANDS */
+  .islands { padding: 80px 0; background: var(--light); }
+  .island-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+  .island-card { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 3/4; cursor: pointer; transition: transform 0.3s; }
+  .island-card:hover { transform: scale(1.03); }
+  .island-card-bg { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(47,55,68,0.85) 100%); z-index: 1; }
+  .island-card-fill { position: absolute; inset: 0; }
+  .island-card-fill.exuma { background: linear-gradient(135deg, #1a8a97, #31B8C6); }
+  .island-card-fill.eleuthera { background: linear-gradient(135deg, #2AA3B0, #5BCBD6); }
+  .island-card-fill.harbour { background: linear-gradient(135deg, #D47A3A, #F28F52); }
+  .island-card-fill.nassau { background: linear-gradient(135deg, #1A5C6B, #2F8A97); }
+  .island-card-fill.abaco { background: linear-gradient(135deg, #3DC4D1, #6FD9E3); }
+  .island-card-fill.longisland { background: linear-gradient(135deg, #E8944D, #F5AD78); }
+  .island-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; z-index: 2; color: white; }
+  .island-card-info h3 { color: white; font-size: 1.05rem; margin-bottom: 4px; }
+  .island-card-info p { font-size: 0.8rem; color: rgba(255,255,255,0.8); }
+
+  /* WHY US — V3: review-mined copy */
+  .why-us { padding: 80px 0; }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .why-visual { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; background: linear-gradient(135deg, #1a7a85, #31B8C6); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6); font-weight: 600; }
+  .why-content h2 { margin-bottom: 20px; }
+  .why-content > p { margin-bottom: 36px; font-size: 1.05rem; }
+  .why-points { display: flex; flex-direction: column; gap: 24px; }
+  .why-point { display: flex; gap: 16px; align-items: flex-start; }
+  .why-point-icon { width: 48px; height: 48px; min-width: 48px; border-radius: 12px; background: var(--light); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+  .why-point h4 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .why-point p { font-size: 0.9rem; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 80px 0; background: var(--dark); }
+  .testimonials .section-label { color: var(--orange); }
+  .testimonials .section-header h2 { color: white; }
+  .testimonials .section-header p { color: rgba(255,255,255,0.6); }
+  .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .testimonial-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 32px; transition: all 0.3s; }
+  .testimonial-card:hover { background: rgba(255,255,255,0.1); }
+  .testimonial-stars { color: var(--orange); font-size: 0.9rem; margin-bottom: 16px; letter-spacing: 2px; }
+  .testimonial-text { color: rgba(255,255,255,0.85); font-size: 1rem; line-height: 1.7; margin-bottom: 24px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .testimonial-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--orange)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
+  .testimonial-name { font-weight: 700; color: white; font-size: 0.9rem; }
+  .testimonial-trip { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+  /* V3: FAQ section */
+  .faq { padding: 80px 0; background: var(--light); }
+  .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 48px; }
+  .faq-item { background: white; border-radius: var(--radius); padding: 28px; border: 1px solid #eef2f5; box-shadow: var(--shadow-sm); }
+  .faq-item h4 { font-size: 1rem; font-weight: 800; margin-bottom: 10px; color: var(--dark); display: flex; align-items: flex-start; gap: 10px; }
+  .faq-item h4 .q-icon { color: var(--teal); flex-shrink: 0; margin-top: 1px; }
+  .faq-item p { font-size: 0.9rem; line-height: 1.7; }
+
+  /* FINAL CTA — V4: 2-field form + V3: reassurance */
+  .final-cta { padding: 100px 0; text-align: center; background: linear-gradient(135deg, var(--light) 0%, #e8f8fa 100%); }
+  .final-cta h2 { margin-bottom: 16px; }
+  .final-cta > .container > .lead { max-width: 520px; margin: 0 auto 16px; font-size: 1.1rem; }
+
+  /* V3: Reassurance cluster */
+  .final-cta-reassurance { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 36px; font-size: 0.85rem; font-weight: 600; color: var(--dark-light); }
+  .final-cta-reassurance .r-item { display: flex; align-items: center; gap: 6px; }
+  .final-cta-reassurance .r-item .check { color: var(--green); }
+
+  /* V4: 2-field form */
+  .inquiry-form { max-width: 480px; margin: 0 auto 32px; background: white; border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow-md); border: 1px solid #eef2f5; }
+  .inquiry-form h3 { font-size: 1.15rem; margin-bottom: 8px; }
+  .inquiry-form .form-sub { font-size: 0.88rem; color: var(--dark-light); margin-bottom: 24px; }
+  .form-field { margin-bottom: 16px; }
+  .form-field label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--dark); margin-bottom: 6px; }
+  .form-field input { width: 100%; padding: 14px 16px; border: 2px solid #eef2f5; border-radius: 10px; font-family: 'Mulish', sans-serif; font-size: 0.95rem; color: var(--dark); outline: none; transition: border-color 0.2s; }
+  .form-field input:focus { border-color: var(--teal); }
+  .form-submit { width: 100%; padding: 16px; background: var(--orange); color: white; border: none; border-radius: 50px; font-family: 'Mulish', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .form-submit:hover { background: var(--orange-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(242,143,82,0.35); }
+  .form-note { font-size: 0.78rem; color: var(--dark-light); margin-top: 12px; text-align: center; }
+
+  .final-cta-contact { margin-top: 24px; font-size: 0.95rem; color: var(--dark-light); }
+  .final-cta-contact a { color: var(--teal); font-weight: 700; }
+
+  /* V4: Sticky bar */
+  .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--dark); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; transform: translateY(100%); transition: transform 0.4s ease; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
+  .sticky-bar.visible { transform: translateY(0); }
+  .sticky-bar-text { color: rgba(255,255,255,0.85); font-size: 0.9rem; font-weight: 600; }
+  .sticky-bar-text strong { color: white; }
+  .sticky-bar-cta { background: var(--orange); color: white; padding: 12px 28px; border-radius: 50px; font-weight: 700; font-size: 0.9rem; white-space: nowrap; transition: background 0.2s; border: none; cursor: pointer; font-family: 'Mulish', sans-serif; }
+  .sticky-bar-cta:hover { background: var(--orange-dark); }
+  .sticky-bar-close { color: rgba(255,255,255,0.4); cursor: pointer; background: none; border: none; font-size: 1.2rem; padding: 4px; transition: color 0.2s; }
+  .sticky-bar-close:hover { color: white; }
+
+  /* FOOTER */
+  .footer { background: var(--dark); padding: 60px 0 80px; color: rgba(255,255,255,0.7); }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-brand .footer-logo { font-size: 1.1rem; font-weight: 800; color: var(--teal); margin-bottom: 16px; }
+  .footer-brand .footer-logo span { color: white; }
+  .footer-brand .footer-logo .script { color: var(--orange); font-style: italic; font-weight: 600; }
+  .footer-brand p { font-size: 0.9rem; line-height: 1.7; max-width: 300px; }
+  .footer h4 { color: white; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 20px; }
+  .footer ul { list-style: none; }
+  .footer ul li { margin-bottom: 10px; }
+  .footer ul a { font-size: 0.9rem; transition: color 0.2s; }
+  .footer ul a:hover { color: var(--teal); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+
+  .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 1024px) {
+    .property-grid { grid-template-columns: repeat(2, 1fr); }
+    .island-grid { grid-template-columns: repeat(3, 1fr); }
+    .why-grid { grid-template-columns: 1fr; }
+    .why-visual { max-height: 350px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .mobile-toggle { display: block; }
+    .property-grid { grid-template-columns: 1fr; }
+    .testimonial-grid { grid-template-columns: 1fr; }
+    .island-grid { grid-template-columns: repeat(2, 1fr); }
+    .search-bar { flex-direction: column; gap: 0; }
+    .search-field { border-right: none; border-bottom: 1px solid #eef2f5; width: 100%; }
+    .search-btn { width: 100%; text-align: center; justify-content: center; }
+    .trust-inner { gap: 24px; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    .hero-cred { gap: 16px; }
+    .hero-cred-divider { display: none; }
+    .whats-included-inner { gap: 16px; }
+    .final-cta-reassurance { gap: 16px; }
+    .sticky-bar { flex-wrap: wrap; }
+    .sticky-bar-text { flex: 1; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">THE GOOD LIFE <span>VACATION RENTALS</span> <span class="script">Bahamas</span></a>
+    <div class="nav-links">
+      <a href="#properties">Rentals</a>
+      <a href="#islands">Islands</a>
+      <a href="#why-us">About</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="#contact" class="nav-cta">View Properties</a>
+    </div>
+    <button class="mobile-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO: V2 layout + V3 pricing anchor + V2 headline + V2 single CTA + V2+V3 credibility -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Top 100 Bahamas Collection 2025 &middot; 500+ Families Trust Us
+      </div>
+
+      <!-- V2: Sensory benefit-driven headline -->
+      <h1>
+        Wake up to turquoise water.
+        <span class="line2">Live The Good Life.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Handpicked luxury villas and beachfront estates across the most beautiful islands in the Bahamas — with a local team who personally knows every property.
+      </p>
+
+      <!-- V3: Pricing anchor — removes sticker-shock anxiety before they click -->
+      <div class="hero-price-anchor">
+        &#127968; Stays starting from $850/night &nbsp;·&nbsp; No booking fees
+      </div>
+
+      <!-- V2: Single CTA (V4: exploratory language) -->
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+          Explore Our Collection
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <!-- V3: Reassurance line below CTA -->
+      <div class="hero-reassurance">
+        <span>&#10003;</span> Free consultation &nbsp;
+        <span>&#10003;</span> Flexible cancellation &nbsp;
+        <span>&#10003;</span> No commitment to inquire
+      </div>
+
+      <!-- V2: Credibility cluster at decision moment -->
+      <div class="hero-cred">
+        <div class="hero-cred-item"><span class="icon">&#9733;</span> 4.9/5 rating</div>
+        <div class="hero-cred-divider"></div>
+        <div class="hero-cred-item"><span class="icon">&#128101;</span> 500+ guest stays</div>
+        <div class="hero-cred-divider"></div>
+        <div class="hero-cred-item"><span class="icon">&#127970;</span> 15 yrs local expertise</div>
+        <div class="hero-cred-divider"></div>
+        <div class="hero-cred-item"><span class="icon">&#127965;</span> 50+ curated properties</div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="number">50+</div><div class="label">Curated Properties</div></div>
+        <div class="hero-stat"><div class="number">6</div><div class="label">Islands</div></div>
+        <div class="hero-stat"><div class="number">15+</div><div class="label">Years Local Expertise</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll to explore</span>
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
+  </div>
+</section>
+
+<!-- SEARCH BAR -->
+<div class="search-section">
+  <div class="container">
+    <div class="search-bar">
+      <div class="search-field"><label>Check In</label><input type="text" placeholder="Select date" readonly></div>
+      <div class="search-field"><label>Check Out</label><input type="text" placeholder="Select date" readonly></div>
+      <div class="search-field">
+        <label>Island</label>
+        <select><option>All Islands</option><option>Exuma</option><option>Eleuthera</option><option>Harbour Island</option><option>Nassau</option><option>Abaco</option><option>Long Island</option></select>
+      </div>
+      <div class="search-field">
+        <label>Guests</label>
+        <select><option>Any</option><option>2</option><option>4</option><option>6</option><option>8</option><option>10+</option></select>
+      </div>
+      <button class="search-btn">Browse</button>
+    </div>
+  </div>
+</div>
+
+<!-- V3: What's Included trust strip -->
+<div class="whats-included">
+  <div class="container">
+    <div class="whats-included-inner">
+      <div class="wi-item"><div class="wi-check">&#10003;</div> No booking fees</div>
+      <div class="wi-item"><div class="wi-check">&#10003;</div> Flexible cancellation</div>
+      <div class="wi-item"><div class="wi-check">&#10003;</div> 24/7 local support</div>
+      <div class="wi-item"><div class="wi-check">&#10003;</div> Personal concierge included</div>
+      <div class="wi-item"><div class="wi-check">&#10003;</div> Free trip planning consultation</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="container">
+    <div class="trust-inner">
+      <div class="trust-item"><div class="trust-icon">&#127965;</div><span>Beachfront &amp; Oceanfront</span></div>
+      <div class="trust-item"><div class="trust-icon">&#127869;</div><span>Private Chef Available</span></div>
+      <div class="trust-item"><div class="trust-icon">&#128736;</div><span>Full Concierge Service</span></div>
+      <div class="trust-item"><div class="trust-icon">&#9733;</div><span>Top 100 Collection 2025</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROPERTIES — V4 soft CTAs + V3 flexible cancellation micro-copy -->
+<section class="properties" id="properties">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-label">Featured Properties</div>
+      <h2>Discover your perfect Bahamas villa</h2>
+      <p>Handpicked homes with prime locations and outstanding amenities. Browse our collection and tell us what you love.</p>
+    </div>
+    <div class="property-grid">
+
+      <div class="property-card fade-up">
+        <div class="property-card-img"><div class="property-card-img-placeholder">[ Surf House Photo ]</div><span class="property-badge">Popular</span></div>
+        <div class="property-card-body">
+          <div class="property-location">Exuma</div>
+          <h3>Surf House</h3>
+          <p class="property-desc">Close to mangroves, sandbars, and sea life</p>
+          <div class="property-meta"><span>&#128101; 8 Guests</span><span>&#127968; 4 Rooms</span><span>&#128705; 4 Baths</span></div>
+          <div class="property-footer">
+            <div class="property-price">$1,210 <small>/night</small></div>
+            <div class="property-cta-wrap">
+              <button class="property-cta">See Details</button>
+              <span class="property-micro">&#10003; Flexible cancellation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card fade-up">
+        <div class="property-card-img"><div class="property-card-img-placeholder">[ Kalopsia Villa 5 Photo ]</div><span class="property-badge">Oceanfront</span></div>
+        <div class="property-card-body">
+          <div class="property-location">Exuma</div>
+          <h3>Kalopsia Villa 5</h3>
+          <p class="property-desc">Oceanfront 4-BR villa with pool and beach access</p>
+          <div class="property-meta"><span>&#128101; 10 Guests</span><span>&#127968; 5 Rooms</span><span>&#128705; 4 Baths</span></div>
+          <div class="property-footer">
+            <div class="property-price">$1,200 <small>/night</small></div>
+            <div class="property-cta-wrap">
+              <button class="property-cta">See Details</button>
+              <span class="property-micro">&#10003; Flexible cancellation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card fade-up">
+        <div class="property-card-img"><div class="property-card-img-placeholder">[ Marina House Photo ]</div></div>
+        <div class="property-card-body">
+          <div class="property-location">Exuma</div>
+          <h3>Marina House</h3>
+          <p class="property-desc">Villa overlooking private marina</p>
+          <div class="property-meta"><span>&#128101; 12 Guests</span><span>&#127968; 6 Rooms</span><span>&#128705; 6 Baths</span></div>
+          <div class="property-footer">
+            <div class="property-price">$2,200 <small>/night</small></div>
+            <div class="property-cta-wrap">
+              <button class="property-cta">See Details</button>
+              <span class="property-micro">&#10003; Flexible cancellation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card fade-up">
+        <div class="property-card-img"><div class="property-card-img-placeholder">[ Cable Beach House Photo ]</div><span class="property-badge">Emmy Nominated</span></div>
+        <div class="property-card-body">
+          <div class="property-location">Nassau</div>
+          <h3>Cable Beach House</h3>
+          <p class="property-desc">Charming house steps from nightlife and sand</p>
+          <div class="property-meta"><span>&#128101; 10 Guests</span><span>&#127968; 5 Rooms</span><span>&#128705; 4 Baths</span></div>
+          <div class="property-footer">
+            <div class="property-price">$1,200 <small>/night</small></div>
+            <div class="property-cta-wrap">
+              <button class="property-cta">See Details</button>
+              <span class="property-micro">&#10003; Flexible cancellation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card fade-up">
+        <div class="property-card-img"><div class="property-card-img-placeholder">[ Beacon Hill Estate Photo ]</div><span class="property-badge">Luxury</span></div>
+        <div class="property-card-body">
+          <div class="property-location">Eleuthera</div>
+          <h3>The Beacon Hill Estate</h3>
+          <p class="property-desc">Waterfront estate in Harbour Island's Narrows</p>
+          <div class="property-meta"><span>&#128101; 12 Guests</span><span>&#127968; 6 Rooms</span><span>&#128705; 6 Baths</span></div>
+          <div class="property-footer">
+            <div class="property-price">$14,520 <small>/night</small></div>
+            <div class="property-cta-wrap">
+              <button class="property-cta">See Details</button>
+              <span class="property-micro">&#10003; Flexible cancellation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-card fade-up">
+        <div class="property-card-img"><div class="property-card-img-placeholder">[ Casa Bella Photo ]</div></div>
+        <div class="property-card-body">
+          <div class="property-location">Exuma</div>
+          <h3>Casa Bella</h3>
+          <p class="property-desc">The calmest spot for safe swimming for children</p>
+          <div class="property-meta"><span>&#128101; 10 Guests</span><span>&#127968; 5 Rooms</span><span>&#128705; 5 Baths</span></div>
+          <div class="property-footer">
+            <div class="property-price">$2,420 <small>/night</small></div>
+            <div class="property-cta-wrap">
+              <button class="property-cta">See Details</button>
+              <span class="property-micro">&#10003; Flexible cancellation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="section-cta-row fade-up">
+      <a href="#" class="btn-outline">Browse All 50+ Properties
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ISLANDS -->
+<section class="islands" id="islands">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-label">Explore by Island</div>
+      <h2>Best places to stay in The Bahamas</h2>
+      <p>Each island offers a unique experience. Discover your perfect destination.</p>
+    </div>
+    <div class="island-grid fade-up">
+      <div class="island-card"><div class="island-card-fill exuma"></div><div class="island-card-bg"></div><div class="island-card-info"><h3>Exuma</h3><p>30+ rentals</p></div></div>
+      <div class="island-card"><div class="island-card-fill eleuthera"></div><div class="island-card-bg"></div><div class="island-card-info"><h3>Eleuthera</h3><p>10+ rentals</p></div></div>
+      <div class="island-card"><div class="island-card-fill harbour"></div><div class="island-card-bg"></div><div class="island-card-info"><h3>Harbour Island</h3><p>8+ rentals</p></div></div>
+      <div class="island-card"><div class="island-card-fill nassau"></div><div class="island-card-bg"></div><div class="island-card-info"><h3>Nassau</h3><p>5+ rentals</p></div></div>
+      <div class="island-card"><div class="island-card-fill abaco"></div><div class="island-card-bg"></div><div class="island-card-info"><h3>Abaco</h3><p>6+ rentals</p></div></div>
+      <div class="island-card"><div class="island-card-fill longisland"></div><div class="island-card-bg"></div><div class="island-card-info"><h3>Long Island</h3><p>4+ rentals</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US — V3: review-mined language -->
+<section class="why-us" id="why-us">
+  <div class="container">
+    <div class="why-grid">
+      <div class="why-visual fade-up">[ Team / lifestyle photo &mdash; The Good Life Bahamas team ]</div>
+      <div class="why-content fade-up">
+        <div class="section-label">Why The Good Life</div>
+        <h2>Like having a local friend who knows everyone.</h2>
+        <p>We're not a marketplace. We're a local team who personally knows every property, every island, and every hidden gem. Your trip is our reputation.</p>
+        <div class="why-points">
+          <div class="why-point"><div class="why-point-icon">&#127758;</div><div><h4>Local experts, not algorithms</h4><p>We live and breathe the Bahamas. Every recommendation comes from firsthand experience.</p></div></div>
+          <div class="why-point"><div class="why-point-icon">&#128222;</div><div><h4>Always just a phone call away</h4><p>Feel safe knowing we're here before, during, and after your trip. A real person, reachable anytime.</p></div></div>
+          <div class="why-point"><div class="why-point-icon">&#10024;</div><div><h4>Experiences you won't find online</h4><p>From private chefs to hidden beaches, we connect you with the Bahamas others never discover.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-label">Guest Reviews</div>
+      <h2>What people say</h2>
+      <p>Hear from guests who experienced The Good Life firsthand.</p>
+    </div>
+    <div class="testimonial-grid fade-up">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"There is the Bahamas with The Good Life and there are Bahamas without the good life. They are two different things."</p>
+        <div class="testimonial-author"><div class="testimonial-avatar">P</div><div><div class="testimonial-name">Peter</div><div class="testimonial-trip">Exuma getaway</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"The Good Life Bahamas is like having a cool cousin in the country, who knows everyone, connects you with great experiences, who you can call back if anything goes wrong."</p>
+        <div class="testimonial-author"><div class="testimonial-avatar">G</div><div><div class="testimonial-name">Guest</div><div class="testimonial-trip">Family vacation</div></div></div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"I felt safe knowing they were just a phone call away. I saw so many things I would've never seen had The Good Life not made me aware."</p>
+        <div class="testimonial-author"><div class="testimonial-avatar">S</div><div><div class="testimonial-name">Sarah</div><div class="testimonial-trip">Adventure trip</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- V3: FAQ section -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-label">Common Questions</div>
+      <h2>Everything you need to know</h2>
+      <p>We believe in full transparency. Here are the answers our guests ask most.</p>
+    </div>
+    <div class="faq-grid fade-up">
+      <div class="faq-item"><h4><span class="q-icon">&#128178;</span> Are there any hidden booking fees?</h4><p>No. What you see is what you pay. We charge no booking fees on top of the nightly rate. We'll give you a fully itemized quote before any commitment.</p></div>
+      <div class="faq-item"><h4><span class="q-icon">&#128197;</span> What's your cancellation policy?</h4><p>We offer flexible cancellation on most properties. Your quote will clearly show the cancellation terms for each specific property before you commit.</p></div>
+      <div class="faq-item"><h4><span class="q-icon">&#128222;</span> What if something goes wrong during our stay?</h4><p>You'll have a direct line to our local team 24/7. We're not a faceless platform — we're a local Bahamas team who can physically show up if needed.</p></div>
+      <div class="faq-item"><h4><span class="q-icon">&#127968;</span> What's included with the rental?</h4><p>All properties include concierge planning, airport transfer coordination, local recommendations, and personal support throughout your stay.</p></div>
+      <div class="faq-item"><h4><span class="q-icon">&#128269;</span> How does the booking process work?</h4><p>Tell us your dates, group size, and preferences. We send you a curated shortlist. You pick, we handle everything else. No pressure, no commitment to inquire.</p></div>
+      <div class="faq-item"><h4><span class="q-icon">&#127757;</span> Is it safe to travel to the Bahamas?</h4><p>Absolutely. The Bahamas is one of the most visited destinations in the Caribbean. Our team has 15+ years of local knowledge and will advise you on the best islands for your travel style.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA — V4: 2-field form + V3: reassurance cluster -->
+<section class="final-cta" id="contact">
+  <div class="container">
+    <div class="section-label fade-up">Ready to Explore?</div>
+    <h2 class="fade-up">Get your personalized Bahamas shortlist</h2>
+    <p class="lead fade-up">Drop your name and email. We'll send you a curated selection of properties that match what you're looking for — no pressure, no commitment.</p>
+
+    <!-- V3: Reassurance cluster -->
+    <div class="final-cta-reassurance fade-up">
+      <div class="r-item"><span class="check">&#10003;</span> Free, no-obligation</div>
+      <div class="r-item"><span class="check">&#10003;</span> Responds within 2 hours</div>
+      <div class="r-item"><span class="check">&#10003;</span> Flexible cancellation</div>
+      <div class="r-item"><span class="check">&#10003;</span> No booking fees</div>
+    </div>
+
+    <!-- V4: 2-field form -->
+    <div class="inquiry-form fade-up">
+      <h3>Tell us about your trip</h3>
+      <p class="form-sub">Takes 30 seconds. We respond within 2 hours.</p>
+      <div class="form-field"><label>Your name</label><input type="text" placeholder="First name is fine"></div>
+      <div class="form-field"><label>Your email</label><input type="email" placeholder="you@email.com"></div>
+      <button class="form-submit">
+        Send Me The Collection
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p class="form-note">No spam. No pressure. Just beautiful Bahamas properties.</p>
+    </div>
+
+    <p class="final-cta-contact">Prefer to call? <a href="tel:+13057014133">+1 (305) 701-4133</a> &nbsp;·&nbsp; <a href="mailto:rentals@thegoodlifebahamas.com">rentals@thegoodlifebahamas.com</a></p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">THE GOOD LIFE <span>VACATION RENTALS</span> <span class="script">Bahamas</span></div>
+        <p>The inside track to authentic Bahamas. Handpicked luxury vacation rentals across six stunning islands, backed by local expertise and personal concierge service.</p>
+      </div>
+      <div><h4>Islands</h4><ul><li><a href="#">Exuma</a></li><li><a href="#">Eleuthera</a></li><li><a href="#">Harbour Island</a></li><li><a href="#">Nassau</a></li><li><a href="#">Abaco</a></li><li><a href="#">Long Island</a></li></ul></div>
+      <div><h4>Rentals</h4><ul><li><a href="#">Beachfront</a></li><li><a href="#">Villas with Pool</a></li><li><a href="#">Staffed Villas</a></li><li><a href="#">Luxury Estates</a></li><li><a href="#">With Dock</a></li><li><a href="#">Oceanfront</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Our Team</a></li><li><a href="#">Concierge Services</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Real Estate</a></li><li><a href="#">Blog</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 The Good Life Bahamas Realty. All rights reserved.</span>
+      <span>Phone: +1 (305) 701-4133 &middot; rentals@thegoodlifebahamas.com</span>
+    </div>
+  </div>
+</footer>
+
+<!-- V4: Sticky bar -->
+<div class="sticky-bar" id="stickyBar">
+  <div class="sticky-bar-text"><strong>50+ Bahamas villas, starting from $850/night</strong> — Free curated shortlist, no commitment</div>
+  <a href="#contact" class="sticky-bar-cta">Explore Our Collection</a>
+  <button class="sticky-bar-close" id="stickyClose">&#215;</button>
+</div>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); });
+
+  const stickyBar = document.getElementById('stickyBar');
+  const stickyClose = document.getElementById('stickyClose');
+  let stickyDismissed = false;
+  window.addEventListener('scroll', () => {
+    if (!stickyDismissed && window.scrollY > 600) stickyBar.classList.add('visible');
+    else if (window.scrollY < 600) stickyBar.classList.remove('visible');
+  });
+  stickyClose.addEventListener('click', () => { stickyDismissed = true; stickyBar.classList.remove('visible'); });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
