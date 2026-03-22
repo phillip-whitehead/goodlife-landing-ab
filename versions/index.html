@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRO Version Switcher — The Good Life Bahamas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Mulish', sans-serif; background: #0D1B2A; color: #E2E8F0; min-height: 100vh; }
+  a { text-decoration: none; color: inherit; }
+
+  :root {
+    --teal: #31B8C6; --orange: #F28F52; --dark: #0D1B2A;
+    --card-bg: #1A2B3C; --border: rgba(255,255,255,0.08);
+    --green: #22C55E; --yellow: #EAB308; --blue: #3B82F6; --purple: #A855F7;
+    --red: #EF4444;
+  }
+
+  .header {
+    padding: 40px 24px 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #0A1520 0%, #0D1B2A 100%);
+  }
+  .header-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(49,184,198,0.15); border: 1px solid rgba(49,184,198,0.3);
+    color: var(--teal); padding: 6px 16px; border-radius: 50px;
+    font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 20px;
+  }
+  .header h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; color: white;
+    margin-bottom: 12px; line-height: 1.2;
+  }
+  .header h1 span { color: var(--teal); }
+  .header p { color: rgba(255,255,255,0.55); font-size: 1rem; max-width: 560px; margin: 0 auto 28px; line-height: 1.7; }
+
+  .methodology-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 32px; flex-wrap: wrap;
+    padding: 20px 24px;
+    background: rgba(49,184,198,0.06); border-bottom: 1px solid var(--border);
+  }
+  .meth-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.6);
+  }
+  .meth-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+
+  .main { max-width: 1300px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+  }
+
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+
+  .card-preview {
+    position: relative; height: 220px; overflow: hidden;
+    background: linear-gradient(165deg, #0D3B4C, #1A5C6B, #2AA3B0);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .card-preview-label {
+    font-size: 4rem; font-weight: 900; color: rgba(255,255,255,0.08);
+    user-select: none;
+  }
+  .card-preview-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0); transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card:hover .card-preview-overlay { background: rgba(0,0,0,0.4); }
+  .card-preview-btn {
+    opacity: 0; transform: scale(0.9);
+    transition: all 0.2s;
+    background: white; color: #0D1B2A;
+    padding: 12px 28px; border-radius: 50px;
+    font-weight: 800; font-size: 0.95rem;
+  }
+  .card:hover .card-preview-btn { opacity: 1; transform: scale(1); }
+
+  .card-version-tag {
+    position: absolute; top: 16px; left: 16px;
+    padding: 5px 14px; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .card-body { padding: 24px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+  .card-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .card-num { font-size: 0.75rem; font-weight: 800; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-hypothesis-badge {
+    font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
+    border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .card-body h2 { font-size: 1.15rem; font-weight: 800; color: white; line-height: 1.3; }
+  .card-body .desc { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+  .card-changes {
+    list-style: none; display: flex; flex-direction: column; gap: 8px;
+    margin-top: 4px;
+  }
+  .card-changes li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.5;
+  }
+  .card-changes li .bullet {
+    width: 16px; height: 16px; min-width: 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem; margin-top: 2px; font-weight: 900;
+    color: white;
+  }
+
+  .card-cta {
+    display: flex; gap: 10px; margin-top: auto; padding-top: 8px;
+  }
+  .card-btn-primary {
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 12px 16px; border-radius: 10px;
+    font-weight: 700; font-size: 0.88rem; transition: all 0.2s;
+    color: white;
+  }
+  .card-btn-secondary {
+    padding: 12px 16px; border-radius: 10px;
+    font-weight: 600; font-size: 0.85rem;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .card-btn-secondary:hover { background: rgba(255,255,255,0.1); color: white; }
+
+  /* Version color schemes */
+  .v1 .card-version-tag { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+  .v1 .card-hypothesis-badge { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+  .v1 .card-btn-primary { background: rgba(255,255,255,0.12); }
+  .v1 .card-btn-primary:hover { background: rgba(255,255,255,0.2); }
+  .v1 .bullet { background: rgba(255,255,255,0.2); }
+
+  .v2 .card-preview { background: linear-gradient(165deg, #0A2E3B, #0D3B4C, #2AA3B0); }
+  .v2 .card-version-tag { background: rgba(49,184,198,0.2); color: var(--teal); }
+  .v2 .card-hypothesis-badge { background: rgba(49,184,198,0.15); color: var(--teal); }
+  .v2 .card-btn-primary { background: var(--teal); }
+  .v2 .card-btn-primary:hover { background: #2AA3B0; }
+  .v2 .bullet { background: var(--teal); }
+
+  .v3 .card-preview { background: linear-gradient(165deg, #14532d, #166534, #22c55e); }
+  .v3 .card-version-tag { background: rgba(34,197,94,0.2); color: var(--green); }
+  .v3 .card-hypothesis-badge { background: rgba(34,197,94,0.15); color: var(--green); }
+  .v3 .card-btn-primary { background: #16a34a; }
+  .v3 .card-btn-primary:hover { background: #15803d; }
+  .v3 .bullet { background: var(--green); }
+
+  .v4 .card-preview { background: linear-gradient(165deg, #1e3a5f, #1d4ed8, #3b82f6); }
+  .v4 .card-version-tag { background: rgba(59,130,246,0.2); color: var(--blue); }
+  .v4 .card-hypothesis-badge { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .v4 .card-btn-primary { background: var(--blue); }
+  .v4 .card-btn-primary:hover { background: #2563eb; }
+  .v4 .bullet { background: var(--blue); }
+
+  .v5 .card-preview { background: linear-gradient(165deg, #3b0764, #6b21a8, #a855f7); }
+  .v5 .card-version-tag { background: rgba(168,85,247,0.2); color: var(--purple); }
+  .v5 .card-hypothesis-badge { background: rgba(168,85,247,0.15); color: var(--purple); }
+  .v5 .card-btn-primary { background: var(--purple); }
+  .v5 .card-btn-primary:hover { background: #9333ea; }
+  .v5 .bullet { background: var(--purple); }
+  .v5 .card { border-color: rgba(168,85,247,0.3); }
+  .v5-best-label {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3);
+    color: var(--purple); padding: 4px 12px; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .v6 .card-preview { background: linear-gradient(165deg, #1a3a2a, #1a5c3a, #22c55e80, #0d3b4c); }
+  .v6 .card-preview { background: linear-gradient(145deg, #0d3b4c 0%, #1a5c6b 50%, #c06020 100%); }
+  .v6 .card-version-tag { background: rgba(242,143,82,0.2); color: var(--orange); }
+  .v6 .card-hypothesis-badge { background: rgba(242,143,82,0.15); color: var(--orange); }
+  .v6 .card-btn-primary { background: var(--orange); }
+  .v6 .card-btn-primary:hover { background: #E07A3D; }
+  .v6 .bullet { background: var(--orange); }
+  .v6 .card { border-color: rgba(242,143,82,0.2); }
+  .v6-new-label {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(242,143,82,0.15); border: 1px solid rgba(242,143,82,0.3);
+    color: var(--orange); padding: 4px 12px; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .methodology-section {
+    margin-top: 64px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 40px;
+  }
+  .methodology-section h3 {
+    font-size: 1.2rem; font-weight: 800; color: white; margin-bottom: 8px;
+  }
+  .methodology-section .lead { color: rgba(255,255,255,0.5); margin-bottom: 32px; font-size: 0.9rem; }
+  .principles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  .principle {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .principle-num { font-size: 0.72rem; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .principle h4 { font-size: 0.95rem; font-weight: 800; color: white; margin-bottom: 6px; }
+  .principle p { font-size: 0.82rem; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+  .footer-note {
+    text-align: center; padding: 32px 24px;
+    font-size: 0.82rem; color: rgba(255,255,255,0.25);
+    border-top: 1px solid var(--border); margin-top: 48px;
+  }
+
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+    .methodology-bar { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">
+    &#9881; CRO Autoresearch — 6 Versions
+  </div>
+  <h1>The Good Life Bahamas<br><span>Landing Page Tests</span></h1>
+  <p>6 conversion-optimized versions based on Arsh Sanwarwala's ThrillX methodology — "Beauty and Brains." One focused hypothesis per version.</p>
+</div>
+
+<div class="methodology-bar">
+  <div class="meth-item"><div class="dot"></div> Above-the-fold is everything</div>
+  <div class="meth-item"><div class="dot"></div> Lower-commitment CTAs win</div>
+  <div class="meth-item"><div class="dot"></div> Fewer CTAs = better</div>
+  <div class="meth-item"><div class="dot"></div> Address visitor anxieties directly</div>
+  <div class="meth-item"><div class="dot"></div> Review mining</div>
+  <div class="meth-item"><div class="dot"></div> Shorter forms</div>
+</div>
+
+<div class="main">
+  <div class="grid">
+
+    <!-- V1 -->
+    <div class="card v1">
+      <div class="card-preview">
+        <div class="card-preview-label">V1</div>
+        <div class="card-version-tag">v1 — Baseline</div>
+        <a href="v1.html" target="_blank" class="card-preview-overlay">
+          <div class="card-preview-btn">View Version ↗</div>
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-num">Version 1 of 6</span>
+          <span class="card-hypothesis-badge">Control</span>
+        </div>
+        <h2>Current Baseline</h2>
+        <p class="desc">The original landing page — saved as-is. This is the control against which all other versions are measured.</p>
+        <ul class="card-changes">
+          <li><div class="bullet">—</div> Split hero layout (content + image grid)</li>
+          <li><div class="bullet">—</div> Two CTAs: "Start Planning" + "Browse Properties"</li>
+          <li><div class="bullet">—</div> Generic headline: "Your Bahamas dream vacation starts here"</li>
+          <li><div class="bullet">—</div> No pricing transparency, no anxiety reducers</li>
+          <li><div class="bullet">—</div> Hard-sell CTAs: "Check Availability", "Book Your Stay"</li>
+        </ul>
+        <div class="card-cta">
+          <a href="v1.html" target="_blank" class="card-btn-primary">Open Version 1</a>
+          <div class="card-btn-secondary">Baseline</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V2 -->
+    <div class="card v2">
+      <div class="card-preview">
+        <div class="card-preview-label">V2</div>
+        <div class="card-version-tag">v2 — Hero</div>
+        <a href="v2-above-fold.html" target="_blank" class="card-preview-overlay">
+          <div class="card-preview-btn">View Version ↗</div>
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-num">Version 2 of 6</span>
+          <span class="card-hypothesis-badge">Above-the-fold test</span>
+        </div>
+        <h2>Above-the-Fold Optimization</h2>
+        <p class="desc">Hypothesis: A benefit-driven headline + full-bleed hero + single CTA + credibility cluster will increase hero-to-scroll and CTA click rate.</p>
+        <ul class="card-changes">
+          <li><div class="bullet">✓</div> Sensory headline: "Wake up to turquoise water. Live The Good Life."</li>
+          <li><div class="bullet">✓</div> Single CTA only — removed secondary "Browse" button</li>
+          <li><div class="bullet">✓</div> Credibility cluster below CTA at click-decision moment</li>
+          <li><div class="bullet">✓</div> Full-bleed centered hero (less cognitive load)</li>
+          <li><div class="bullet">✓</div> Stats closer to CTA for social proof context</li>
+        </ul>
+        <div class="card-cta">
+          <a href="v2-above-fold.html" target="_blank" class="card-btn-primary">Open Version 2</a>
+          <div class="card-btn-secondary">Hero test</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V3 -->
+    <div class="card v3">
+      <div class="card-preview">
+        <div class="card-preview-label">V3</div>
+        <div class="card-version-tag">v3 — Trust</div>
+        <a href="v3-anxiety-reduction.html" target="_blank" class="card-preview-overlay">
+          <div class="card-preview-btn">View Version ↗</div>
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-num">Version 3 of 6</span>
+          <span class="card-hypothesis-badge">Anxiety reduction test</span>
+        </div>
+        <h2>Anxiety Reduction</h2>
+        <p class="desc">Hypothesis: Proactively addressing pricing, cancellation, and support fears will reduce drop-off and increase inquiry rate.</p>
+        <ul class="card-changes">
+          <li><div class="bullet">✓</div> Pricing anchor in hero: "Starting from $850/night · No booking fees"</li>
+          <li><div class="bullet">✓</div> "What's Included" green trust strip below search bar</li>
+          <li><div class="bullet">✓</div> Flexible cancellation micro-copy on every property card</li>
+          <li><div class="bullet">✓</div> FAQ section above final CTA (top 6 guest anxieties)</li>
+          <li><div class="bullet">✓</div> Review-mined copy: "like having a local friend who knows everyone"</li>
+          <li><div class="bullet">✓</div> Reassurance cluster near final CTA</li>
+        </ul>
+        <div class="card-cta">
+          <a href="v3-anxiety-reduction.html" target="_blank" class="card-btn-primary">Open Version 3</a>
+          <div class="card-btn-secondary">Trust test</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V4 -->
+    <div class="card v4">
+      <div class="card-preview">
+        <div class="card-preview-label">V4</div>
+        <div class="card-version-tag">v4 — Soft CTA</div>
+        <a href="v4-soft-cta.html" target="_blank" class="card-preview-overlay">
+          <div class="card-preview-btn">View Version ↗</div>
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-num">Version 4 of 6</span>
+          <span class="card-hypothesis-badge">CTA friction test</span>
+        </div>
+        <h2>Lower-Commitment CTAs</h2>
+        <p class="desc">Hypothesis: Replacing hard-sell CTAs with exploratory language will remove friction and increase the number of people who enter the funnel.</p>
+        <ul class="card-changes">
+          <li><div class="bullet">✓</div> All CTAs softened: "Explore Collection" / "See Details" / "Browse All"</li>
+          <li><div class="bullet">✓</div> Nav: "View Properties" instead of "Book Your Stay"</li>
+          <li><div class="bullet">✓</div> Single hero CTA (removed secondary button)</li>
+          <li><div class="bullet">✓</div> 2-field form: Name + Email only (Arsh: remove every non-essential field)</li>
+          <li><div class="bullet">✓</div> Sticky bottom bar — persistent but dismissible, non-intrusive</li>
+          <li><div class="bullet">✓</div> Section copy reframed as exploration, not commitment</li>
+        </ul>
+        <div class="card-cta">
+          <a href="v4-soft-cta.html" target="_blank" class="card-btn-primary">Open Version 4</a>
+          <div class="card-btn-secondary">Friction test</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V5 -->
+    <div class="card v5">
+      <div class="card-preview">
+        <div class="card-preview-label">V5</div>
+        <div class="card-version-tag">v5 — Best</div>
+        <a href="v5-best-combined.html" target="_blank" class="card-preview-overlay">
+          <div class="card-preview-btn">View Version ↗</div>
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-num">Version 5 of 6</span>
+          <span class="card-hypothesis-badge">Best combined</span>
+          <span class="v5-best-label">&#11088; Recommended</span>
+        </div>
+        <h2>Best Combined — Ultimate Version</h2>
+        <p class="desc">Takes the winning element from each test and combines them. Based on Arsh's principle: test in isolation, then bring the winners together.</p>
+        <ul class="card-changes">
+          <li><div class="bullet">✓</div> <strong style="color:rgba(255,255,255,0.8)">From v2:</strong> Sensory headline + single CTA + credibility cluster + centered hero</li>
+          <li><div class="bullet">✓</div> <strong style="color:rgba(255,255,255,0.8)">From v3:</strong> Pricing anchor + What's Included strip + FAQ + reassurance clusters</li>
+          <li><div class="bullet">✓</div> <strong style="color:rgba(255,255,255,0.8)">From v4:</strong> Soft CTA language + 2-field form + sticky bar</li>
+          <li><div class="bullet">✓</div> <strong style="color:rgba(255,255,255,0.8)">Review-mined:</strong> "Like having a local friend who knows everyone"</li>
+          <li><div class="bullet">✓</div> <strong style="color:rgba(255,255,255,0.8)">Throughout:</strong> Flexible cancellation micro-copy on every card</li>
+        </ul>
+        <div class="card-cta">
+          <a href="v5-best-combined.html" target="_blank" class="card-btn-primary">Open Version 5 &#11088;</a>
+          <div class="card-btn-secondary">Recommended</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V6 -->
+    <div class="card v6">
+      <div class="card-preview">
+        <div class="card-preview-label">V6</div>
+        <div class="card-version-tag">v6 — Problem/Solution Hero</div>
+        <a href="v6-problem-solution.html" target="_blank" class="card-preview-overlay">
+          <div class="card-preview-btn">View Version ↗</div>
+        </a>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-num">Version 6 of 6</span>
+          <span class="card-hypothesis-badge">Hero framing test</span>
+          <span class="v6-new-label">&#9733; New</span>
+        </div>
+        <h2>Problem / Solution Hero</h2>
+        <p class="desc">Hypothesis: Framing the hero around the visitor's pain point ("tired of cookie-cutter resorts?") before presenting the solution creates stronger resonance and higher intent to scroll.</p>
+        <ul class="card-changes">
+          <li><div class="bullet">✓</div> Right hero column replaced with inline Problem + Solution headlines</li>
+          <li><div class="bullet">✓</div> No photo panels — pure text framing for emotional contrast</li>
+          <li><div class="bullet">✓</div> Star rating + credibility badges anchor beneath the copy</li>
+          <li><div class="bullet">✓</div> Shorter hero (82vh) so search bar is visible above the fold</li>
+          <li><div class="bullet">✓</div> Real photo in Why Us section (Beacon Hill Estate, Eleuthera)</li>
+          <li><div class="bullet">✓</div> Builds on v4 soft-CTA framework throughout</li>
+        </ul>
+        <div class="card-cta">
+          <a href="v6-problem-solution.html" target="_blank" class="card-btn-primary">Open Version 6</a>
+          <div class="card-btn-secondary">New</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Methodology Reference -->
+  <div class="methodology-section">
+    <h3>Arsh Sanwarwala / ThrillX — CRO Principles Applied</h3>
+    <p class="lead">Each version tests exactly one hypothesis. This is the core ThrillX discipline: isolate the variable, measure the result, combine the winners.</p>
+    <div class="principles-grid">
+      <div class="principle">
+        <div class="principle-num">Principle 1</div>
+        <h4>Above the fold is everything</h4>
+        <p>Headline + hero image tests produce 50%+ conversion swings. Tested in v2 with sensory copy and credibility cluster.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 2</div>
+        <h4>Lower-commitment CTAs win</h4>
+        <p>"Learn More" beat "Book A Call" and drove 385% more booked calls. Tested in v4 with exploratory language throughout.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 3</div>
+        <h4>Fewer CTAs = better</h4>
+        <p>Cutting from two CTAs to one produces measurable lifts. Applied in v2 and v4 — single hero CTA only.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 4</div>
+        <h4>Address visitor anxieties directly</h4>
+        <p>Pricing transparency, cancellation policy, what's included. Tested in v3 with trust strip, FAQ, and micro-copy.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 5</div>
+        <h4>Review mining</h4>
+        <p>Use real guest language in copy — motivation, anxiety, value themes. Applied in v3/v5: "like a cool cousin who knows everyone."</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 6</div>
+        <h4>Shorter forms</h4>
+        <p>Remove every non-essential field. Tested in v4: name + email only, replacing full booking widget.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 7</div>
+        <h4>One hypothesis per version</h4>
+        <p>Don't change everything at once — you won't know what worked. v2/v3/v4/v6 each isolate one variable.</p>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Framework</div>
+        <h4>"Beauty and Brains"</h4>
+        <p>Professional visual design + data-driven optimization. Don't sacrifice aesthetics for CRO — both matter together.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  The Good Life Bahamas Rentals — CRO Autoresearch · 6 versions · Arsh Sanwarwala / ThrillX methodology
+</div>
+
+</body>
+</html>
