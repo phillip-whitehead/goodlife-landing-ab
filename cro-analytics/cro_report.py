@@ -38,7 +38,7 @@ CLARITY_API_KEY     = os.getenv('CLARITY_API_KEY', '')       # from Clarity → 
 HUBSPOT_PORTAL      = '21915863'
 PIPELINE_ID         = '48052530'
 
-CLARITY_BASE = 'https://www.clarity.ms/api/v1'
+CLARITY_BASE = 'https://www.clarity.ms/export-data/api/v1'
 
 # Vacation rental pipeline stages in order
 PIPELINE_STAGES = {
@@ -113,46 +113,38 @@ def pull_clarity_data(days=7):
 
     results = {'available': True, 'by_page': [], 'overall': {}, 'version_pages': {}}
 
-    # 1. Overall project metrics for the period
+    # 1. Overall project metrics — uses the export-data live-insights endpoint
+    # Response is a list: [{"metricName": "RageClickCount", "information": [{...}]}, ...]
     try:
-        url = f'{CLARITY_BASE}/{CLARITY_PROJECT_ID}/metrics'
+        url = f'{CLARITY_BASE}/project-live-insights'
         params = {
+            'projectId': CLARITY_PROJECT_ID,
             'startDate': start_str,
             'endDate':   end_str,
             'granularity': 'daily',
         }
         r = requests.get(url, headers=_clarity_headers(), params=params, timeout=15)
         if r.status_code == 200:
-            data = r.json()
-            # Aggregate across all days
+            data = r.json()  # list of {metricName, information:[...]}
+            # Index by metricName for easy lookup
+            by_metric = {item['metricName']: item.get('information', [{}])[0] for item in data}
+
+            traffic   = by_metric.get('Traffic', {})
+            sessions  = int(traffic.get('totalSessionCount', 0))
+            eng       = by_metric.get('EngagementTime', {})
+
             totals = {
-                'sessions':          0,
-                'rage_click_pct':    0.0,
-                'dead_click_pct':    0.0,
-                'quick_back_pct':    0.0,
-                'excessive_scroll_pct': 0.0,
-                'avg_scroll_depth':  0.0,
-                'avg_active_time':   0.0,
+                'sessions':            sessions,
+                'rage_click_pct':      round(float(by_metric.get('RageClickCount',  {}).get('sessionsWithMetricPercentage', 0)), 2),
+                'dead_click_pct':      round(float(by_metric.get('DeadClickCount',  {}).get('sessionsWithMetricPercentage', 0)), 2),
+                'quick_back_pct':      round(float(by_metric.get('QuickbackClick',  {}).get('sessionsWithMetricPercentage', 0)), 2),
+                'excessive_scroll_pct':round(float(by_metric.get('ExcessiveScroll', {}).get('sessionsWithMetricPercentage', 0)), 2),
+                'script_error_pct':    round(float(by_metric.get('ScriptErrorCount',{}).get('sessionsWithMetricPercentage', 0)), 2),
+                'avg_scroll_depth':    round(float(by_metric.get('ScrollDepth',     {}).get('averageScrollDepth', 0)), 1),
+                'avg_active_time_sec': int(eng.get('activeTime', 0)),
+                'avg_total_time_sec':  int(eng.get('totalTime',  0)),
+                'pages_per_session':   round(float(traffic.get('pagesPerSessionPercentage', 0)), 2),
             }
-            rows = data.get('data', []) or data.get('metrics', [])
-            if rows:
-                for row in rows:
-                    totals['sessions']             += int(row.get('sessionCount', 0))
-                    totals['rage_click_pct']        += float(row.get('rageClickCount', 0))
-                    totals['dead_click_pct']        += float(row.get('deadClickCount', 0))
-                    totals['quick_back_pct']        += float(row.get('quickBackCount', 0))
-                    totals['excessive_scroll_pct']  += float(row.get('excessiveScrollCount', 0))
-                    totals['avg_scroll_depth']      += float(row.get('scrollDepth', 0))
-                    totals['avg_active_time']       += float(row.get('activeTime', 0))
-                n = len(rows)
-                if totals['sessions'] > 0:
-                    totals['rage_click_pct']       = round(totals['rage_click_pct']       / totals['sessions'] * 100, 2)
-                    totals['dead_click_pct']       = round(totals['dead_click_pct']       / totals['sessions'] * 100, 2)
-                    totals['quick_back_pct']       = round(totals['quick_back_pct']       / totals['sessions'] * 100, 2)
-                    totals['excessive_scroll_pct'] = round(totals['excessive_scroll_pct'] / totals['sessions'] * 100, 2)
-                if n > 0:
-                    totals['avg_scroll_depth'] = round(totals['avg_scroll_depth'] / n, 1)
-                    totals['avg_active_time']  = round(totals['avg_active_time']  / n, 1)
             results['overall'] = totals
         else:
             results['overall_error'] = f'HTTP {r.status_code}: {r.text[:200]}'
