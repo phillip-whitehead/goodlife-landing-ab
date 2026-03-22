@@ -32,6 +32,18 @@
 - **Changes:** Best headline from V2, anxiety reducers from V3, soft CTAs from V4, merged into ultimate conversion-optimized page
 - **Status:** Live
 
+### V6 — Problem/Solution + Lower-Commitment CTAs
+- **File:** `versions/v6-problem-solution.html`
+- **Hypothesis:** If we replace transactional CTA language with curiosity/exploration framing and show problem/solution panels in the hero, engagement will increase because visitors are browsing, not ready to commit
+- **Changes:** All CTAs softened ("Explore Our Collection", "View Properties", "See Details", "Browse Our Collection"), single focused hero CTA (no secondary button), hero side panels replaced photos with Problem/Solution statements, 2-field inquiry form (name + email only), sticky low-pressure CTA bar, real photo in Why Us section
+- **Status:** Live
+
+### V7 — Trust & Local Authority
+- **File:** `versions/v7-trust-local.html`
+- **Hypothesis:** Visitors with Airbnb as their mental default carry hidden anxieties (photo mismatches, host cancellations, no support); surfacing those fears and resolving them with local authority signals makes The Good Life the obvious safer choice
+- **Changes:** Hero headline reframed around certainty vs. listing platform risk, hero right column shows "The Risk" vs. "The Certainty" panels, trust strip features safety signals (not amenities), new mid-page soft comparison section vs. listing platforms, Why Us reframed around 3 trust pillars (inspection, reliability, local presence), testimonials focused on feeling safe and looked after, final CTA and sticky bar use certainty/risk-reversal framing
+- **Status:** Live
+
 ---
 
 ## Methodology
