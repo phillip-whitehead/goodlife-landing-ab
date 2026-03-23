@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surf House — V3: Experience-Led | Good Life Bahamas CRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Mulish', sans-serif; background: #fff; color: #1D2939; -webkit-font-smoothing: antialiased; }
+  a { text-decoration: none; color: inherit; }
+
+  :root {
+    --teal: #2BBDC1; --teal-dark: #1FA8AC; --teal-light: #E8F9FA;
+    --orange: #F28F52; --text: #1D2939; --muted: #667085;
+    --border: #E4E7EC; --bg-light: #F8FAFC; --green: #12B76A;
+  }
+
+  /* Variant bar */
+  .variant-bar { background: #1D2939; color: #fff; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; font-weight: 700; }
+  .variant-bar .v-tag { background: var(--green); color: #fff; padding: 3px 12px; border-radius: 50px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+  .variant-bar .hypothesis { color: rgba(255,255,255,0.65); font-weight: 500; font-size: 0.75rem; }
+  .variant-bar a { color: #2BBDC1; }
+
+  /* Nav */
+  .nav { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-size: 1rem; font-weight: 900; color: var(--teal); line-height: 1.2; }
+  .nav-logo span { display: block; font-size: 0.65rem; font-weight: 600; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 28px; font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-book-btn { background: var(--teal); color: #fff; padding: 9px 22px; border-radius: 8px; font-size: 0.82rem; font-weight: 800; }
+
+  /* Layout */
+  .page-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 40px; padding: 32px 0 64px; }
+  @media (max-width: 900px) { .page-grid { grid-template-columns: 1fr; } .sticky-sidebar { position: static !important; } }
+
+  /* ── CHANGE 1: Hero headline — experience-led, emotional ── */
+  .hero-headline { padding: 32px 0 20px; }
+  .hero-headline .eyebrow { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: var(--teal); margin-bottom: 10px; }
+  .hero-headline h1 { font-size: 2.6rem; font-weight: 900; color: var(--text); line-height: 1.1; margin-bottom: 10px; }
+  .hero-headline h1 em { font-style: normal; color: var(--teal); }
+  .hero-headline .hero-sub { font-size: 1.05rem; color: var(--muted); font-weight: 500; line-height: 1.6; max-width: 580px; margin-bottom: 16px; }
+  .hero-headline .location-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--bg-light); border: 1px solid var(--border);
+    color: var(--muted); padding: 6px 14px; border-radius: 50px;
+    font-size: 0.8rem; font-weight: 700;
+  }
+
+  /* Quick stats */
+  .quick-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; padding: 14px 18px; background: var(--bg-light); border-radius: 12px; border: 1px solid var(--border); }
+  .quick-stat { display: flex; align-items: center; gap: 8px; font-size: 0.87rem; font-weight: 700; color: var(--text); }
+
+  /* Sections */
+  .section-title { font-size: 1.2rem; font-weight: 800; color: var(--text); margin-bottom: 14px; padding-top: 28px; border-top: 1px solid var(--border); margin-top: 28px; }
+
+  /* ── CHANGE 2: Experience-led description copy ── */
+  .description p { font-size: 0.97rem; color: #344054; line-height: 1.8; margin-bottom: 14px; }
+  .description .pull-quote {
+    border-left: 3px solid var(--teal); padding: 12px 20px;
+    background: var(--teal-light); border-radius: 0 10px 10px 0;
+    font-size: 1.05rem; font-weight: 700; color: var(--teal-dark);
+    margin: 18px 0; font-style: italic; line-height: 1.5;
+  }
+
+  /* ── CHANGE 3: "A Day at Surf House" section ── */
+  .day-section { margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border); }
+  .day-timeline { display: flex; flex-direction: column; gap: 0; }
+  .day-item { display: flex; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+  .day-item:last-child { border-bottom: none; }
+  .day-time { min-width: 90px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); padding-top: 2px; }
+  .day-content h4 { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .day-content p { font-size: 0.84rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── CHANGE 4: Location storytelling ── */
+  .location-section { margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border); }
+  .location-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .location-grid { grid-template-columns: 1fr; } }
+  .location-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+  .location-card .loc-icon { font-size: 1.5rem; margin-bottom: 8px; }
+  .location-card h4 { font-size: 0.9rem; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+  .location-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* Why cards */
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 700px) { .why-grid { grid-template-columns: 1fr; } }
+  .why-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 14px; padding: 20px 18px; }
+  .why-icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .why-card h4 { font-size: 0.9rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .why-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* Amenities */
+  .amenities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 600px) { .amenities-grid { grid-template-columns: repeat(2, 1fr); } }
+  .amenity-item { display: flex; align-items: center; gap: 9px; font-size: 0.86rem; color: #344054; font-weight: 600; }
+  .amenity-item .tick { color: var(--teal); font-size: 1rem; }
+
+  /* Rates */
+  .rates-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  .rates-table th { text-align: left; padding: 10px 16px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 800; background: var(--bg-light); border-bottom: 1px solid var(--border); }
+  .rates-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .rates-table tr:nth-child(even) td { background: var(--bg-light); }
+  .rates-table td:last-child { font-weight: 800; color: var(--text); }
+  .season-tag { display: inline-block; padding: 2px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 800; }
+  .season-tag.high { background: #FFF4ED; color: #B54708; }
+  .season-tag.holiday { background: #FDF2FA; color: #C11574; }
+  .season-tag.low { background: #ECFDF3; color: #027A48; }
+  .season-tag.std { background: var(--bg-light); color: var(--muted); }
+
+  /* Sticky sidebar */
+  .sticky-sidebar { position: sticky; top: 24px; height: fit-content; }
+  .booking-card { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 26px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
+  .price-main { font-size: 1.7rem; font-weight: 900; color: var(--text); }
+  .price-unit { font-size: 0.87rem; color: var(--muted); font-weight: 600; }
+  .booking-form { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .form-field label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); display: block; margin-bottom: 5px; }
+  .form-field input, .form-field select { width: 100%; border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px; font-family: 'Mulish', sans-serif; font-size: 0.87rem; color: var(--text); background: #fff; }
+  .form-field input:focus, .form-field select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(43,189,193,0.12); }
+  .book-btn { width: 100%; background: var(--teal); color: #fff; border: none; border-radius: 12px; padding: 15px; font-family: 'Mulish', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; }
+  .book-btn:hover { background: var(--teal-dark); }
+  .price-caveat { font-size: 0.72rem; color: var(--muted); margin-top: 6px; text-align: center; }
+  .sidebar-trust { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .sidebar-trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+  .questions-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 14px; text-align: center; }
+  .questions-card h4 { font-size: 0.95rem; font-weight: 800; color: var(--teal-dark); margin-bottom: 6px; }
+  .questions-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+  .questions-card .response-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--teal-light); color: var(--teal-dark); padding: 4px 12px; border-radius: 50px; font-size: 0.72rem; font-weight: 800; margin-bottom: 14px; }
+  .contact-btn { width: 100%; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 11px; font-family: 'Mulish', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text); cursor: pointer; transition: border-color 0.2s; }
+  .contact-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+</style>
+</head>
+<body>
+
+<!-- Variant label -->
+<div class="variant-bar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="v-tag">Variant 3</span>
+    <span style="color:#fff;font-weight:700;">Experience-Led Copy</span>
+    <span class="hypothesis">Hypothesis: Sensory, lifestyle-driven copy increases time-on-page and emotional engagement, leading to more inquiries</span>
+  </div>
+  <a href="index.html">← Back to Property CRO Dashboard</a>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">THE GOOD LIFE<span>Vacation Rentals · Bahamas</span></div>
+  <div class="nav-links">
+    <a href="#">Vacation Rentals</a>
+    <a href="#">Our Services</a>
+    <a href="#">About Us</a>
+    <a href="#">Reviews</a>
+    <a href="#">Contact Us</a>
+  </div>
+  <a href="#book" class="nav-book-btn">Book Now</a>
+</nav>
+
+<div class="page-container">
+
+  <!-- CHANGE 1: Experience-led hero headline (not just "Surf House") -->
+  <div class="hero-headline">
+    <div class="eyebrow">Exuma, Bahamas · Exclusive Beachfront Villa</div>
+    <h1>Wake Up to <em>Turquoise Water.</em><br>Every Morning.</h1>
+    <p class="hero-sub">Surf House is your private corner of Exuma — four bedrooms, a pool overlooking Moriah Harbour, and a personal concierge to handle everything else.</p>
+    <span class="location-pill">📍 Hartswell, Moriah Harbour · George Town, Exuma</span>
+  </div>
+
+  <!-- Photo gallery placeholder -->
+  <div style="background:#D1E9EC;border-radius:16px;height:420px;display:flex;align-items:center;justify-content:center;color:var(--teal-dark);font-size:0.9rem;font-weight:700;position:relative;margin-bottom:24px;">
+    <div style="text-align:center;">
+      <div style="font-size:3rem;margin-bottom:8px;">📸</div>
+      <div>Photo gallery — same photos, consider adding captions</div>
+      <div style="font-size:0.78rem;margin-top:6px;color:var(--muted);">"Pool deck at sunset" · "View from the master bedroom" · "The harbour at low tide"</div>
+    </div>
+    <button style="position:absolute;bottom:14px;right:14px;background:#fff;border:1px solid var(--border);padding:7px 14px;border-radius:8px;font-size:0.78rem;font-weight:700;cursor:pointer;">See all photos</button>
+    <a href="#" style="position:absolute;bottom:14px;left:14px;background:rgba(0,0,0,0.7);color:#fff;padding:8px 16px;border-radius:8px;font-size:0.8rem;font-weight:700;display:flex;align-items:center;gap:6px;">▶ Watch Video Tour</a>
+  </div>
+
+  <div class="page-grid">
+    <div class="main-col">
+
+      <!-- Quick stats -->
+      <div class="quick-stats">
+        <div class="quick-stat">👥 8 Guests</div>
+        <div class="quick-stat">🛏 6 Beds · 4 Baths</div>
+        <div class="quick-stat">🏠 4 Bedrooms</div>
+        <div class="quick-stat">🌊 Beachfront</div>
+        <div class="quick-stat">🏊 Private Pool</div>
+      </div>
+
+      <!-- CHANGE 2: Rewritten description — sensory, experiential -->
+      <div class="description">
+        <div class="section-title" style="border-top:none;margin-top:0;padding-top:0;">About Surf House</div>
+
+        <p>There's a moment — early morning, bare feet on the pool deck, Moriah Harbour stretching out in front of you in shades of turquoise that don't seem real — when you understand why people keep coming back to Exuma. Surf House is where that moment happens.</p>
+
+        <div class="pull-quote">"The kind of place that makes you rethink your priorities."</div>
+
+        <p>This four-bedroom beachfront home sits in the heart of Hartswell, a quiet corner of Great Exuma that locals love and tourists rarely find. The pool looks directly onto the harbour. Every bedroom has ocean views. There's a full kitchen for lazy cook-at-home nights and an outdoor dining deck for the evenings when the sunset demands your full attention.</p>
+
+        <p>It sleeps eight comfortably — six beds, four baths — which makes Surf House ideal for a family reunion, a group of friends who've been talking about this trip for years, or couples who want the space to spread out. Pair it with The Good Life's personal concierge and your whole Exuma itinerary is handled: fishing charters, bonefishing guides, private chef evenings, boat rentals, whatever makes a trip extraordinary.</p>
+      </div>
+
+      <!-- CHANGE 3: A Day at Surf House -->
+      <div class="day-section">
+        <h3 class="section-title" style="border-top:none;padding-top:0;margin-top:0;">A Day at Surf House</h3>
+        <p style="font-size:0.88rem;color:var(--muted);margin-bottom:20px;">Every day looks different. Here's one version of it.</p>
+        <div class="day-timeline">
+          <div class="day-item">
+            <div class="day-time">7:00 AM</div>
+            <div class="day-content">
+              <h4>Coffee on the Pool Deck</h4>
+              <p>The harbour is flat, light on the water, and completely quiet. This is why you came.</p>
+            </div>
+          </div>
+          <div class="day-item">
+            <div class="day-time">9:30 AM</div>
+            <div class="day-content">
+              <h4>Bonefishing with a Local Guide</h4>
+              <p>Your concierge arranged it yesterday. The guide picks you up from the dock. Exuma is one of the world's best bonefish flats — you're about to find out why.</p>
+            </div>
+          </div>
+          <div class="day-item">
+            <div class="day-time">1:00 PM</div>
+            <div class="day-content">
+              <h4>Lunch at the Dock</h4>
+              <p>Fresh catch, cold drinks, the whole group around the outdoor table. Someone's already talking about booking next year.</p>
+            </div>
+          </div>
+          <div class="day-item">
+            <div class="day-time">3:00 PM</div>
+            <div class="day-content">
+              <h4>Afternoon in the Pool</h4>
+              <p>Nowhere to be. The turquoise harbour on one side, the pool on the other. This is the part of the itinerary that never gets old.</p>
+            </div>
+          </div>
+          <div class="day-item">
+            <div class="day-time">7:00 PM</div>
+            <div class="day-content">
+              <h4>Dinner on the Deck</h4>
+              <p>Private chef or the kitchen — either way, the sunset comes with dinner. Order of magnitude better than any restaurant.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHANGE 4: Location storytelling -->
+      <div class="location-section">
+        <h3 class="section-title" style="border-top:none;padding-top:0;margin-top:0;">Exuma — Bahamas' Best-Kept Secret</h3>
+        <p style="font-size:0.88rem;color:var(--muted);margin-bottom:20px;">Most visitors never make it past Nassau. The ones who find Exuma tend not to go anywhere else.</p>
+        <div class="location-grid">
+          <div class="location-card">
+            <div class="loc-icon">🌊</div>
+            <h4>The Water</h4>
+            <p>The Exuma Cays produce some of the most photographed water in the world. 50 shades of blue-green, all of them real.</p>
+          </div>
+          <div class="location-card">
+            <div class="loc-icon">🎣</div>
+            <h4>World-Class Fishing</h4>
+            <p>Moriah Harbour flats are legendary among bonefishers. Tarpon, barracuda, snapper — ask your concierge to arrange a guide.</p>
+          </div>
+          <div class="location-card">
+            <div class="loc-icon">⛵</div>
+            <h4>Boat to the Cays</h4>
+            <p>Stocking Island, Chat 'N' Chill, Thunderball Grotto — day trips that take 20 minutes and feel like a different world.</p>
+          </div>
+          <div class="location-card">
+            <div class="loc-icon">🌴</div>
+            <h4>George Town</h4>
+            <p>5 minutes from Surf House. Waterfront restaurants, local markets, the real Bahamas — not a resort version of it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why Book With Us -->
+      <div class="section-title">Why Book With The Good Life</div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">🤝</div>
+          <h4>Personal Concierge</h4>
+          <p>From local tips to arranging activities — your concierge handles everything before and during your stay.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🌴</div>
+          <h4>Bahamian Owned</h4>
+          <p>We only connect you with people we trust — our own friends in experiencing the Bahamas.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🏠</div>
+          <h4>Curated Homes</h4>
+          <p>Every property is hand-selected. If this home isn't available, we'll find you one that will.</p>
+        </div>
+      </div>
+
+      <!-- Amenities -->
+      <div class="section-title">Amenities</div>
+      <div class="amenities-grid">
+        <div class="amenity-item"><span class="tick">✓</span> Private Pool</div>
+        <div class="amenity-item"><span class="tick">✓</span> Beachfront Access</div>
+        <div class="amenity-item"><span class="tick">✓</span> Ocean Views</div>
+        <div class="amenity-item"><span class="tick">✓</span> Air Conditioning</div>
+        <div class="amenity-item"><span class="tick">✓</span> Full Kitchen</div>
+        <div class="amenity-item"><span class="tick">✓</span> WiFi</div>
+        <div class="amenity-item"><span class="tick">✓</span> BBQ Grill</div>
+        <div class="amenity-item"><span class="tick">✓</span> Outdoor Dining</div>
+        <div class="amenity-item"><span class="tick">✓</span> Parking</div>
+      </div>
+
+      <!-- Rates -->
+      <div class="section-title">Rates Per Season</div>
+      <table class="rates-table">
+        <thead><tr><th>Season</th><th>Dates</th><th>Per Night</th></tr></thead>
+        <tbody>
+          <tr><td><span class="season-tag high">High</span></td><td>Mar 1 – Apr 30, 2026</td><td>$1,331/night</td></tr>
+          <tr><td><span class="season-tag std">Standard</span></td><td>May 1 – Aug 31, 2026</td><td>$1,210/night</td></tr>
+          <tr><td><span class="season-tag low">Low</span></td><td>Sep 1 – Oct 31, 2026</td><td>$1,089/night</td></tr>
+          <tr><td><span class="season-tag std">Standard</span></td><td>Nov 1 – Dec 12, 2026</td><td>$1,210/night</td></tr>
+          <tr><td><span class="season-tag holiday">Holiday</span></td><td>Dec 13 – Jan 4, 2027</td><td>$2,200/night</td></tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <!-- Sidebar — unchanged structure, keeps focus on body content -->
+    <div class="sticky-sidebar" id="book">
+      <div class="booking-card">
+        <div class="price-row">
+          <span class="price-main">$1,210</span>
+          <span class="price-unit">/night</span>
+        </div>
+        <p style="font-size:0.75rem;color:var(--muted);margin-bottom:16px;">From $1,089 in low season</p>
+        <div class="booking-form">
+          <div class="form-row">
+            <div class="form-field"><label>Check-in</label><input type="date"></div>
+            <div class="form-field"><label>Check-out</label><input type="date"></div>
+          </div>
+          <div class="form-field"><label>No. of Guests</label>
+            <select><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+          </div>
+          <button class="book-btn">Book Now</button>
+        </div>
+        <p class="price-caveat">*Standard price may change according to season</p>
+        <div class="sidebar-trust">
+          <div class="sidebar-trust-item">🏆 2025 Emmy Award Winner</div>
+          <div class="sidebar-trust-item">⭐ Member of The 100 Collection™</div>
+          <div class="sidebar-trust-item">🌴 Bahamian-owned &amp; operated</div>
+        </div>
+      </div>
+      <div class="questions-card">
+        <h4>Got Questions?</h4>
+        <div class="response-badge">⚡ Reply in under 20 minutes</div>
+        <p>Ask anything about Surf House, Exuma, or your dates. Our concierge team is on standby.</p>
+        <button class="contact-btn">Contact Us</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:#1D2939;color:rgba(255,255,255,0.5);padding:24px;text-align:center;font-size:0.78rem;margin-top:40px;">
+  <strong style="color:#fff;">The Good Life Bahamas Vacation Rentals</strong> · Exuma, Bahamas
+  <span style="margin:0 8px;opacity:0.4;">|</span>
+  <a href="index.html" style="color:var(--teal);">← Property CRO Dashboard</a>
+  <span style="margin:0 8px;opacity:0.4;">|</span>
+  <span style="color:#12B76A;">Variant 3 — Experience-Led Copy</span>
+</footer>
+
+</body>
+</html>

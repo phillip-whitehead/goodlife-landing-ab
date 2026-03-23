@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surf House — V1: Trust & Urgency | Good Life Bahamas CRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Mulish', sans-serif; background: #fff; color: #1D2939; -webkit-font-smoothing: antialiased; }
+  a { text-decoration: none; color: inherit; }
+
+  :root {
+    --teal: #2BBDC1; --teal-dark: #1FA8AC; --teal-light: #E8F9FA;
+    --orange: #F28F52; --text: #1D2939; --muted: #667085;
+    --border: #E4E7EC; --bg-light: #F8FAFC; --green: #12B76A; --red: #F04438;
+  }
+
+  /* ── Variant label bar ── */
+  .variant-bar {
+    background: #1D2939; color: #fff; padding: 10px 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    font-size: 0.78rem; font-weight: 700;
+  }
+  .variant-bar .v-tag { background: #2BBDC1; color: #fff; padding: 3px 12px; border-radius: 50px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+  .variant-bar .hypothesis { color: rgba(255,255,255,0.65); font-weight: 500; font-size: 0.75rem; }
+  .variant-bar a { color: #2BBDC1; }
+
+  /* ── Nav ── */
+  .nav { background: #fff; border-bottom: 1px solid var(--border); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-size: 1rem; font-weight: 900; color: var(--teal); letter-spacing: 0.01em; line-height: 1.2; }
+  .nav-logo span { display: block; font-size: 0.65rem; font-weight: 600; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 28px; font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+  .nav-links a:hover { color: var(--teal); }
+  .nav-book-btn { background: var(--teal); color: #fff; padding: 9px 22px; border-radius: 8px; font-size: 0.82rem; font-weight: 800; }
+
+  /* ── Layout ── */
+  .page-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .page-grid { display: grid; grid-template-columns: 1fr 340px; gap: 40px; padding: 32px 0 64px; }
+  @media (max-width: 900px) { .page-grid { grid-template-columns: 1fr; } .sticky-sidebar { position: static !important; } }
+
+  /* ── Property title ── */
+  .property-title-row { padding: 24px 0 16px; }
+  .property-title-row h1 { font-size: 2.2rem; font-weight: 900; color: var(--text); line-height: 1.15; margin-bottom: 8px; }
+  .property-subtitle { font-size: 1rem; color: var(--muted); font-weight: 500; margin-bottom: 12px; }
+
+  /* ── CHANGE 1: Trust badge row under title ── */
+  .trust-badge-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+  }
+  .trust-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #FFF9F0; border: 1px solid #F28F52; color: #B54708;
+    padding: 5px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 800;
+  }
+  .trust-badge.teal { background: var(--teal-light); border-color: rgba(43,189,193,0.4); color: var(--teal-dark); }
+  .trust-badge.green { background: #ECFDF3; border-color: rgba(18,183,106,0.4); color: #027A48; }
+
+  /* ── CHANGE 2: Urgency bar ── */
+  .urgency-bar {
+    background: #FFF4ED; border: 1px solid #FDDCAB; border-radius: 10px;
+    padding: 11px 18px; display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; font-size: 0.84rem; font-weight: 700; color: #B54708;
+  }
+  .urgency-bar .fire { font-size: 1rem; }
+  .urgency-bar strong { color: #7A2E0E; }
+
+  /* ── Photo gallery ── */
+  .photo-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 240px 180px; gap: 8px; border-radius: 16px; overflow: hidden; margin-bottom: 20px; }
+  .photo-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-main { grid-row: 1 / 3; }
+  .photo-grid .see-all-btn {
+    position: absolute; bottom: 14px; right: 14px;
+    background: #fff; color: var(--text); border: 1px solid var(--border);
+    padding: 7px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+  }
+  .photo-wrapper { position: relative; }
+
+  /* ── Quick stats ── */
+  .quick-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; padding: 16px 20px; background: var(--bg-light); border-radius: 12px; }
+  .quick-stat { display: flex; align-items: center; gap: 8px; font-size: 0.87rem; font-weight: 700; color: var(--text); }
+  .quick-stat .icon { font-size: 1.1rem; }
+
+  /* ── Section headings ── */
+  .section-title { font-size: 1.2rem; font-weight: 800; color: var(--text); margin-bottom: 14px; padding-top: 28px; border-top: 1px solid var(--border); margin-top: 28px; }
+
+  /* ── Description ── */
+  .description p { font-size: 0.95rem; color: #344054; line-height: 1.75; margin-bottom: 12px; }
+
+  /* ── Why Book With Us ── */
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 8px; }
+  @media (max-width: 700px) { .why-grid { grid-template-columns: 1fr; } }
+  .why-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 14px; padding: 20px 18px; }
+  .why-icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .why-card h4 { font-size: 0.9rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .why-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── CHANGE 3: Social proof / reviews strip ── */
+  .reviews-section { margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border); }
+  .reviews-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+  .reviews-header h3 { font-size: 1.2rem; font-weight: 800; }
+  .overall-rating { display: flex; align-items: center; gap: 10px; background: var(--teal-light); border: 1px solid rgba(43,189,193,0.3); padding: 8px 16px; border-radius: 50px; }
+  .rating-number { font-size: 1.4rem; font-weight: 900; color: var(--teal-dark); }
+  .stars { font-size: 1rem; color: #F59E0B; letter-spacing: 1px; }
+  .rating-count { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+  .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 700px) { .reviews-grid { grid-template-columns: 1fr; } }
+  .review-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 14px; padding: 20px 18px; }
+  .review-stars { color: #F59E0B; font-size: 0.85rem; margin-bottom: 8px; }
+  .review-text { font-size: 0.84rem; color: #344054; line-height: 1.65; margin-bottom: 12px; }
+  .review-author { display: flex; align-items: center; gap: 10px; }
+  .review-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--teal); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; }
+  .review-name { font-size: 0.82rem; font-weight: 800; color: var(--text); }
+  .review-date { font-size: 0.73rem; color: var(--muted); }
+  .reviews-note { font-size: 0.75rem; color: var(--muted); margin-top: 14px; font-style: italic; text-align: center; }
+
+  /* ── Amenities ── */
+  .amenities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 600px) { .amenities-grid { grid-template-columns: repeat(2, 1fr); } }
+  .amenity-item { display: flex; align-items: center; gap: 9px; font-size: 0.86rem; color: #344054; font-weight: 600; }
+  .amenity-item .tick { color: var(--teal); font-size: 1rem; }
+
+  /* ── Rates table ── */
+  .rates-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  .rates-table th { text-align: left; padding: 10px 16px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 800; background: var(--bg-light); border-bottom: 1px solid var(--border); }
+  .rates-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .rates-table tr:nth-child(even) td { background: var(--bg-light); }
+  .rates-table td:last-child { font-weight: 800; color: var(--text); }
+  .season-tag { display: inline-block; padding: 2px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 800; }
+  .season-tag.high { background: #FFF4ED; color: #B54708; }
+  .season-tag.holiday { background: #FDF2FA; color: #C11574; }
+  .season-tag.low { background: #ECFDF3; color: #027A48; }
+  .season-tag.std { background: var(--bg-light); color: var(--muted); }
+  /* CHANGE 4: Per-person breakdown */
+  .per-person-note { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+  .per-person-note strong { color: var(--teal-dark); }
+
+  /* ── Sticky sidebar ── */
+  .sticky-sidebar { position: sticky; top: 24px; height: fit-content; }
+  .booking-card { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 26px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+  .price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+  .price-main { font-size: 1.7rem; font-weight: 900; color: var(--text); }
+  .price-unit { font-size: 0.87rem; color: var(--muted); font-weight: 600; }
+  /* CHANGE 5: Per-person price under main price */
+  .price-per-person { font-size: 0.78rem; color: var(--teal-dark); font-weight: 700; margin-bottom: 16px; }
+  .booking-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .form-field label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); display: block; margin-bottom: 5px; }
+  .form-field input, .form-field select { width: 100%; border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px; font-family: 'Mulish', sans-serif; font-size: 0.87rem; color: var(--text); background: #fff; }
+  .form-field input:focus, .form-field select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(43,189,193,0.12); }
+  .book-btn { width: 100%; background: var(--teal); color: #fff; border: none; border-radius: 12px; padding: 15px; font-family: 'Mulish', sans-serif; font-size: 1rem; font-weight: 800; cursor: pointer; transition: background 0.2s; }
+  .book-btn:hover { background: var(--teal-dark); }
+  .price-caveat { font-size: 0.72rem; color: var(--muted); margin-top: 6px; text-align: center; }
+
+  /* CHANGE 6: Urgency on sidebar */
+  .sidebar-urgency {
+    background: #FFF4ED; border: 1px solid #FDDCAB; border-radius: 10px;
+    padding: 10px 14px; margin-bottom: 14px; font-size: 0.78rem; font-weight: 700; color: #B54708;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* CHANGE 7: Trust signals in sidebar */
+  .sidebar-trust { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .sidebar-trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+  .sidebar-trust-item .icon { font-size: 0.95rem; }
+
+  /* Questions card */
+  .questions-card { background: var(--bg-light); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-top: 14px; text-align: center; }
+  .questions-card h4 { font-size: 0.95rem; font-weight: 800; color: var(--teal-dark); margin-bottom: 6px; }
+  .questions-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+  .questions-card .response-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--teal-light); color: var(--teal-dark); padding: 4px 12px; border-radius: 50px; font-size: 0.72rem; font-weight: 800; margin-bottom: 14px; }
+  .contact-btn { width: 100%; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 11px; font-family: 'Mulish', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text); cursor: pointer; transition: border-color 0.2s; }
+  .contact-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+</style>
+</head>
+<body>
+
+<!-- Variant label -->
+<div class="variant-bar">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span class="v-tag">Variant 1</span>
+    <span style="color:#fff;font-weight:700;">Trust &amp; Urgency</span>
+    <span class="hypothesis">Hypothesis: Adding social proof + scarcity signals increases inquiry rate on a $1,210/night listing</span>
+  </div>
+  <a href="index.html">← Back to Property CRO Dashboard</a>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-logo">THE GOOD LIFE<span>Vacation Rentals · Bahamas</span></div>
+  <div class="nav-links">
+    <a href="#">Vacation Rentals</a>
+    <a href="#">Our Services</a>
+    <a href="#">About Us</a>
+    <a href="#">Reviews</a>
+    <a href="#">Contact Us</a>
+  </div>
+  <a href="#book" class="nav-book-btn">Book Now</a>
+</nav>
+
+<div class="page-container">
+
+  <!-- Title + Trust badges -->
+  <div class="property-title-row">
+    <h1>Surf House</h1>
+    <div class="property-subtitle">📍 Hartswell, Moriah Harbour · Exuma, Bahamas</div>
+
+    <!-- CHANGE 1: Trust badges directly under title -->
+    <div class="trust-badge-row">
+      <span class="trust-badge">🏆 2025 Emmy Award Winner</span>
+      <span class="trust-badge">⭐ Proud Member of The 100 Collection™</span>
+      <span class="trust-badge teal">🌊 Beachfront · Private Pool</span>
+      <span class="trust-badge green">✓ Verified Property</span>
+    </div>
+
+    <!-- CHANGE 2: Urgency bar -->
+    <div class="urgency-bar">
+      <span class="fire">🔥</span>
+      <span><strong>High demand:</strong> This property books quickly — limited availability remaining for April–June 2026</span>
+    </div>
+  </div>
+
+  <!-- Photo gallery placeholder -->
+  <div class="photo-wrapper" style="margin-bottom:20px;">
+    <div style="background:#D1E9EC;border-radius:16px;height:420px;display:flex;align-items:center;justify-content:center;color:var(--teal-dark);font-size:0.9rem;font-weight:700;position:relative;">
+      <div style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:8px;">📸</div>
+        <div>Photo gallery — 4 beachfront photos + "See all photos" button</div>
+        <div style="font-size:0.78rem;margin-top:6px;color:var(--muted);">(Same photos as current page — layout unchanged)</div>
+      </div>
+      <button class="see-all-btn">See all photos</button>
+      <!-- CHANGE: Video tour made prominent -->
+      <a href="#" style="position:absolute;bottom:14px;left:14px;background:rgba(0,0,0,0.7);color:#fff;padding:8px 16px;border-radius:8px;font-size:0.8rem;font-weight:700;display:flex;align-items:center;gap:6px;">
+        ▶ Watch Video Tour
+      </a>
+    </div>
+  </div>
+
+  <div class="page-grid">
+    <div class="main-col">
+
+      <!-- Quick stats -->
+      <div class="quick-stats">
+        <div class="quick-stat"><span class="icon">👥</span> 8 Guests</div>
+        <div class="quick-stat"><span class="icon">🛏</span> 6 Beds · 4 Baths</div>
+        <div class="quick-stat"><span class="icon">🏠</span> 4 Bedrooms</div>
+        <div class="quick-stat"><span class="icon">🌊</span> Beachfront</div>
+        <div class="quick-stat"><span class="icon">🏊</span> Private Pool</div>
+      </div>
+
+      <!-- Description -->
+      <div class="description">
+        <div class="section-title" style="border-top:none;margin-top:0;padding-top:0;">About Surf House</div>
+        <p>Welcome to Surf House — a luxurious beachfront retreat in the heart of Hartswell, Moriah Harbour, Exuma. This stunning four-bedroom home is made for those seeking the ultimate Bahamian escape: turquoise water outside your door, a private pool for lazy afternoons, and the kind of tranquility you can only find on one of the world's most beautiful islands.</p>
+        <p>With space for 8 guests, six beds and four bathrooms, Surf House is ideal for families, friend groups, and couples celebrating something special. Paired with The Good Life's personal concierge service, every detail of your stay is taken care of — from local fishing trips to private chef bookings.</p>
+      </div>
+
+      <!-- Why book with us -->
+      <div class="section-title">Why Book With The Good Life</div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">🤝</div>
+          <h4>Personal Concierge</h4>
+          <p>From local tips to arranging activities — your concierge handles everything before and during your stay.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🌴</div>
+          <h4>Bahamian Owned</h4>
+          <p>We only connect you with people we trust — our own friends in experiencing the Bahamas.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🏠</div>
+          <h4>Curated Homes</h4>
+          <p>Every property is hand-selected. If this home isn't available, we'll find you one that will.</p>
+        </div>
+      </div>
+
+      <!-- CHANGE 3: Social proof / reviews -->
+      <div class="reviews-section">
+        <div class="reviews-header">
+          <h3>Guest Reviews</h3>
+          <div class="overall-rating">
+            <span class="rating-number">4.9</span>
+            <span class="stars">★★★★★</span>
+            <span class="rating-count">Good Life guests</span>
+          </div>
+        </div>
+
+        <div class="reviews-grid">
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Absolutely stunning property. Waking up to that turquoise water every morning was something else. The concierge arranged our fishing trip and a sunset boat — didn't have to think about a thing."</p>
+            <div class="review-author">
+              <div class="review-avatar">JM</div>
+              <div><div class="review-name">James M.</div><div class="review-date">The Good Life guest · Feb 2026</div></div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"We've stayed at a lot of luxury rentals. This was different. The location in Exuma is unbeatable and the house itself is immaculate. Our group of 8 had plenty of space and privacy."</p>
+            <div class="review-author">
+              <div class="review-avatar" style="background:#F28F52;">SR</div>
+              <div><div class="review-name">Sarah R.</div><div class="review-date">The Good Life guest · Jan 2026</div></div>
+            </div>
+          </div>
+          <div class="review-card">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"The pool overlooking the harbour is something you have to see to believe. Easy booking process, fast responses, and everything was exactly as described. Already planning a return trip."</p>
+            <div class="review-author">
+              <div class="review-avatar" style="background:#12B76A;">TK</div>
+              <div><div class="review-name">Tom K.</div><div class="review-date">The Good Life guest · Dec 2025</div></div>
+            </div>
+          </div>
+        </div>
+        <p class="reviews-note">⚠️ CRO NOTE: These are placeholder reviews. In production, pull verified reviews from your Reviews page or request Google/Trustpilot embeds. Even 2–3 real reviews dramatically lift conversion at this price point.</p>
+      </div>
+
+      <!-- Amenities -->
+      <div class="section-title">Amenities</div>
+      <div class="amenities-grid">
+        <div class="amenity-item"><span class="tick">✓</span> Private Pool</div>
+        <div class="amenity-item"><span class="tick">✓</span> Beachfront Access</div>
+        <div class="amenity-item"><span class="tick">✓</span> Ocean Views</div>
+        <div class="amenity-item"><span class="tick">✓</span> Air Conditioning</div>
+        <div class="amenity-item"><span class="tick">✓</span> Full Kitchen</div>
+        <div class="amenity-item"><span class="tick">✓</span> WiFi</div>
+        <div class="amenity-item"><span class="tick">✓</span> BBQ Grill</div>
+        <div class="amenity-item"><span class="tick">✓</span> Outdoor Dining</div>
+        <div class="amenity-item"><span class="tick">✓</span> Parking</div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:10px;">⚠️ CRO NOTE: Show top 8–10 amenities upfront (no "Show all" click required). The current hidden amenity list is a friction point.</p>
+
+      <!-- Rates -->
+      <div class="section-title">Rates Per Season</div>
+      <table class="rates-table">
+        <thead><tr><th>Season</th><th>Dates</th><th>Per Night</th><th>Per Person*</th></tr></thead>
+        <tbody>
+          <tr><td><span class="season-tag high">High</span></td><td>Mar 1 – Apr 30</td><td>$1,331</td><td>~$166/person</td></tr>
+          <tr><td><span class="season-tag std">Standard</span></td><td>May 1 – Aug 31</td><td>$1,210</td><td>~$151/person</td></tr>
+          <tr><td><span class="season-tag low">Low</span></td><td>Sep 1 – Oct 31</td><td>$1,089</td><td>~$136/person</td></tr>
+          <tr><td><span class="season-tag std">Standard</span></td><td>Nov 1 – Dec 12</td><td>$1,210</td><td>~$151/person</td></tr>
+          <tr><td><span class="season-tag holiday">Holiday</span></td><td>Dec 13 – Jan 4</td><td>$2,200</td><td>~$275/person</td></tr>
+        </tbody>
+      </table>
+      <!-- CHANGE 4: Per-person context -->
+      <p class="per-person-note">* Based on full occupancy (8 guests). <strong>Split between friends or family, Surf House works out to as little as $136/person per night.</strong></p>
+
+    </div>
+
+    <!-- Sticky sidebar -->
+    <div class="sticky-sidebar" id="book">
+      <div class="booking-card">
+        <!-- CHANGE 5: Price with per-person context -->
+        <div class="price-row">
+          <span class="price-main">$1,210</span>
+          <span class="price-unit">/night</span>
+        </div>
+        <div class="price-per-person">≈ $151/person · Based on 8 guests</div>
+
+        <!-- CHANGE 6: Sidebar urgency -->
+        <div class="sidebar-urgency">
+          🔥 <span>Limited dates left for April–June 2026</span>
+        </div>
+
+        <div class="booking-form">
+          <div class="form-row">
+            <div class="form-field"><label>Check-in</label><input type="date" placeholder="mm/dd/yyyy"></div>
+            <div class="form-field"><label>Check-out</label><input type="date" placeholder="mm/dd/yyyy"></div>
+          </div>
+          <div class="form-field"><label>No. of Guests</label>
+            <select><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+          </div>
+          <button class="book-btn">Book Now</button>
+        </div>
+        <p class="price-caveat">*Standard price may change according to season</p>
+
+        <!-- CHANGE 7: Trust signals in sidebar -->
+        <div class="sidebar-trust">
+          <div class="sidebar-trust-item"><span class="icon">🏆</span> 2025 Emmy Award Winner</div>
+          <div class="sidebar-trust-item"><span class="icon">⭐</span> Proud Member of The 100 Collection™</div>
+          <div class="sidebar-trust-item"><span class="icon">🔒</span> Secure booking · No hidden fees</div>
+          <div class="sidebar-trust-item"><span class="icon">🌴</span> Bahamian-owned &amp; operated</div>
+        </div>
+      </div>
+
+      <div class="questions-card">
+        <h4>Got Questions?</h4>
+        <div class="response-badge">⚡ Reply in under 20 minutes</div>
+        <p>Our concierge team is on standby to answer anything about Surf House, Exuma, or your dates.</p>
+        <button class="contact-btn">Contact Us</button>
+      </div>
+    </div>
+  </div><!-- /page-grid -->
+</div><!-- /page-container -->
+
+<footer style="background:#1D2939;color:rgba(255,255,255,0.5);padding:24px;text-align:center;font-size:0.78rem;margin-top:40px;">
+  <strong style="color:#fff;">The Good Life Bahamas Vacation Rentals</strong> · Exuma, Bahamas
+  <span style="margin:0 8px;opacity:0.4;">|</span>
+  <a href="index.html" style="color:var(--teal);">← Property CRO Dashboard</a>
+  <span style="margin:0 8px;opacity:0.4;">|</span>
+  <span style="color:#2BBDC1;">Variant 1 — Trust &amp; Urgency</span>
+</footer>
+
+</body>
+</html>
