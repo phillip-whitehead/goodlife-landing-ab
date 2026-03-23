@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Page CRO — The Good Life Bahamas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Mulish', sans-serif;
+    background: #0D1B2A;
+    color: #E2E8F0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  :root {
+    --teal: #31B8C6; --teal-dark: #2AA3B0; --teal-glow: rgba(49,184,198,0.15);
+    --orange: #F28F52; --dark: #0D1B2A; --darker: #080F18;
+    --card-bg: #1A2B3C; --card-bg-2: #152232; --border: rgba(255,255,255,0.07);
+    --border-teal: rgba(49,184,198,0.25); --green: #22C55E; --yellow: #EAB308;
+    --blue: #3B82F6; --red: #EF4444;
+    --text-muted: rgba(255,255,255,0.45); --text-mid: rgba(255,255,255,0.65);
+  }
+
+  /* ── Preview bar ── */
+  .preview-bar {
+    background: #080F18; border-bottom: 1px solid rgba(49,184,198,0.2);
+    padding: 9px 24px; display: flex; align-items: center; gap: 10px;
+    font-size: 0.76rem; color: var(--text-muted);
+  }
+  .preview-bar .label { font-weight: 700; color: var(--teal);
+    text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .preview-bar a { color: var(--text-mid); font-weight: 600; transition: color 0.18s; }
+  .preview-bar a:hover { color: var(--teal); }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    background: var(--darker); border-bottom: 1px solid var(--border-teal);
+    padding: 11px 24px; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .stats-bar-items { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .stat-chip {
+    display: flex; align-items: center; gap: 7px; font-size: 0.8rem;
+    font-weight: 600; color: var(--text-mid); padding: 0 18px;
+    border-right: 1px solid var(--border);
+  }
+  .stat-chip:first-child { padding-left: 0; }
+  .stat-chip:last-child { border-right: none; }
+  .stat-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+  .stat-chip .dot.orange { background: var(--orange); }
+  .stat-chip .dot.yellow { background: var(--yellow); }
+  .stat-chip strong { color: #fff; }
+  .run-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(49,184,198,0.1); border: 1px solid var(--border-teal);
+    color: var(--teal); padding: 7px 16px; border-radius: 8px;
+    font-size: 0.78rem; font-weight: 700; font-family: 'Mulish', sans-serif;
+    transition: all 0.2s; cursor: pointer; white-space: nowrap;
+  }
+  .run-btn:hover { background: rgba(49,184,198,0.2); color: #fff; border-color: var(--teal); }
+
+  /* ── Page header ── */
+  .page-header {
+    background: linear-gradient(180deg,#060D14 0%,#0D1B2A 100%);
+    border-bottom: 1px solid var(--border); padding: 52px 24px 44px; text-align: center;
+  }
+  .eyebrow-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(49,184,198,0.1); border: 1px solid var(--border-teal);
+    color: var(--teal); padding: 6px 18px; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 22px;
+  }
+  .eyebrow-pill .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--teal); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  .page-header h1 {
+    font-size: clamp(2rem,4.5vw,3.2rem); font-weight: 900; color: #fff;
+    margin-bottom: 14px; line-height: 1.12;
+  }
+  .page-header h1 .accent { color: var(--teal); }
+  .page-header h1 .accent-orange { color: var(--orange); }
+  .page-header .sub {
+    color: var(--text-muted); font-size: 1rem; max-width: 600px;
+    margin: 0 auto; line-height: 1.7;
+  }
+
+  /* ── Section wrapper ── */
+  .section-wrapper { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── Section header ── */
+  .section-header { padding: 56px 0 36px; }
+  .section-header .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--teal); margin-bottom: 14px;
+  }
+  .section-header .section-label .bar { width: 22px; height: 2px; background: var(--teal); border-radius: 2px; }
+  .section-header h2 { font-size: clamp(1.5rem,3vw,2.1rem); font-weight: 900; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+  .section-header p { color: var(--text-muted); font-size: 0.94rem; max-width: 640px; line-height: 1.65; }
+
+  /* ── Horizontal stats row ── */
+  .evolution-stats-row {
+    display: flex; align-items: center; gap: 0;
+    background: var(--card-bg-2); border: 1px solid var(--border-teal);
+    border-radius: 14px; overflow: hidden; margin-bottom: 48px; flex-wrap: wrap;
+  }
+  .evo-stat { flex: 1; min-width: 180px; padding: 18px 24px; border-right: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .evo-stat:last-child { border-right: none; }
+  .evo-stat-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .evo-stat-icon.teal { background: rgba(49,184,198,0.15); }
+  .evo-stat-icon.orange { background: rgba(242,143,82,0.15); }
+  .evo-stat-icon.yellow { background: rgba(234,179,8,0.15); }
+  .evo-stat-value { font-size: 1.1rem; font-weight: 800; color: #fff; line-height: 1.2; }
+  .evo-stat-value.teal { color: var(--teal); }
+  .evo-stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+  /* ── Timeline ── */
+  .timeline-track { position: relative; padding-left: 48px; margin-bottom: 64px; }
+  .timeline-track::before {
+    content: ''; position: absolute; left: 15px; top: 24px; bottom: 24px;
+    width: 2px; background: linear-gradient(180deg, var(--teal) 0%, rgba(49,184,198,0.15) 100%);
+    border-radius: 2px;
+  }
+  .timeline-node { position: relative; margin-bottom: 28px; }
+  .timeline-node::before {
+    content: ''; position: absolute; left: -39px; top: 22px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--teal); border: 3px solid #0D1B2A;
+    box-shadow: 0 0 0 2px rgba(49,184,198,0.35); z-index: 2;
+  }
+  .timeline-node.placeholder-node::before {
+    background: #1A2B3C; border-color: rgba(49,184,198,0.4); box-shadow: none;
+  }
+  .baseline-node { position: relative; margin-bottom: 28px; }
+  .baseline-node::before {
+    content: ''; position: absolute; left: -39px; top: 22px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--orange); border: 3px solid #0D1B2A;
+    box-shadow: 0 0 0 2px rgba(242,143,82,0.35); z-index: 2;
+  }
+  .baseline-card {
+    background: linear-gradient(135deg,#1A2B3C 0%,#152232 100%);
+    border: 1px solid rgba(242,143,82,0.35); border-radius: 16px;
+    padding: 22px 28px; display: flex; align-items: center;
+    justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  }
+  .baseline-week-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 6px; }
+  .baseline-title { font-size: 1.05rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .baseline-sub { font-size: 0.82rem; color: var(--text-muted); }
+  .baseline-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(242,143,82,0.12); border: 1px solid rgba(242,143,82,0.3);
+    color: var(--orange); padding: 6px 14px; border-radius: 50px;
+    font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.08em; white-space: nowrap;
+  }
+  .baseline-badge .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: pulse 1.8s infinite; }
+
+  /* ── Placeholder card ── */
+  .placeholder-card {
+    border: 2px dashed rgba(49,184,198,0.25); border-radius: 16px;
+    padding: 32px 36px; background: rgba(49,184,198,0.025);
+    position: relative; overflow: hidden;
+  }
+  .placeholder-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 18px, rgba(49,184,198,0.025) 18px, rgba(49,184,198,0.025) 36px);
+    pointer-events: none;
+  }
+  .placeholder-inner { position: relative; z-index: 1; }
+  .placeholder-week-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 10px; }
+  .placeholder-title { font-size: 1.25rem; font-weight: 900; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+  .placeholder-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
+  .placeholder-command {
+    display: inline-block; background: #080F18; border: 1px solid rgba(49,184,198,0.2);
+    border-radius: 8px; padding: 10px 18px;
+    font-family: 'Courier New', Courier, monospace; font-size: 0.82rem;
+    color: var(--teal); letter-spacing: 0.01em; margin-bottom: 20px;
+  }
+  .placeholder-info {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: rgba(49,184,198,0.07); border: 1px solid rgba(49,184,198,0.15);
+    border-radius: 10px; padding: 14px 18px; max-width: 680px;
+  }
+  .placeholder-info .info-icon { font-size: 0.95rem; margin-top: 1px; flex-shrink: 0; color: var(--teal); }
+  .placeholder-info .info-text { font-size: 0.81rem; color: var(--text-mid); line-height: 1.6; }
+  .placeholder-info .info-text strong { color: #fff; font-weight: 700; }
+
+  /* ── Auto-generated week cards (injected by weekly_cycle_property.py) ── */
+  .week-card {
+    background: var(--card-bg); border: 1px solid var(--border-teal);
+    border-radius: 16px; padding: 24px 28px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .week-card:hover { border-color: var(--teal); box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
+  .week-card-header {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .week-number-badge {
+    background: rgba(49,184,198,0.15); color: var(--teal); border: 1px solid var(--border-teal);
+    padding: 4px 14px; border-radius: 50px; font-size: 0.72rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
+  }
+  .week-date-range { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+  .week-winner-badge {
+    background: rgba(234,179,8,0.15); color: var(--yellow);
+    border: 1px solid rgba(234,179,8,0.4); padding: 4px 12px; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em;
+  }
+  .week-hypothesis { margin-bottom: 18px; }
+  .week-section-label {
+    font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .week-hypothesis p { font-size: 0.9rem; color: #CBD5E1; line-height: 1.65; }
+  .week-metrics-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px;
+  }
+  @media (max-width: 600px) { .week-metrics-grid { grid-template-columns: repeat(2,1fr); } }
+  .week-metric {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .wm-val { font-size: 1rem; font-weight: 800; color: #fff; line-height: 1.25; word-break: break-all; }
+  .wm-lbl { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
+  .week-delta { margin-bottom: 16px; }
+  .week-delta p { font-size: 0.86rem; color: var(--text-mid); line-height: 1.6; }
+  .week-view-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(49,184,198,0.1); border: 1px solid var(--border-teal);
+    color: var(--teal); padding: 8px 18px; border-radius: 9px;
+    font-size: 0.78rem; font-weight: 700; transition: all 0.2s;
+  }
+  .week-view-btn:hover { background: rgba(49,184,198,0.2); color: #fff; border-color: var(--teal); }
+
+  /* ── Footer ── */
+  .page-footer {
+    background: var(--darker); border-top: 1px solid var(--border);
+    padding: 24px; text-align: center; font-size: 0.78rem; color: var(--text-muted);
+  }
+  .page-footer strong { color: var(--text-mid); }
+  .page-footer .sep { margin: 0 8px; opacity: 0.4; }
+
+  @media (max-width: 720px) {
+    .timeline-track { padding-left: 32px; }
+    .timeline-track::before { left: 11px; }
+    .timeline-node::before { left: -27px; }
+    .baseline-node::before { left: -27px; }
+    .timeline-node.placeholder-node::before { left: -27px; }
+    .evolution-stats-row { flex-direction: column; gap: 0; }
+    .evo-stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .evo-stat:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Preview bar -->
+<div class="preview-bar">
+  <span class="label">Live&nbsp;Preview</span>
+  <span>→</span>
+  <a href="https://goodlife-landing-ab.pages.dev/property-pages/" target="_blank" rel="noopener">
+    https://goodlife-landing-ab.pages.dev/property-pages/
+  </a>
+</div>
+
+<!-- Stats bar -->
+<div class="stats-bar">
+  <div class="stats-bar-items">
+    <div class="stat-chip">
+      <span class="dot orange"></span>
+      <span><strong>Property Page CRO</strong> active</span>
+    </div>
+    <div class="stat-chip">
+      <span class="dot"></span>
+      <span>Data sources: <strong>GA4</strong> + <strong>HubSpot</strong> + <strong>Clarity</strong></span>
+    </div>
+    <div class="stat-chip">
+      <span class="dot yellow"></span>
+      <span>Run <strong>weekly</strong> every Monday morning</span>
+    </div>
+  </div>
+  <button class="run-btn" onclick="void(0)">
+    <span>▶</span>
+    <span>python3 cro-analytics/weekly_cycle_property.py</span>
+  </button>
+</div>
+
+<!-- Page header -->
+<div class="page-header">
+  <div class="eyebrow-pill">
+    <span class="pulse"></span>
+    Property Page CRO System
+  </div>
+  <h1>
+    Property Page <span class="accent">Weekly</span> Optimization<br>
+    <span style="font-size:0.65em;font-weight:700;color:var(--text-muted);">The Good Life Bahamas</span>
+  </h1>
+  <p class="sub">
+    Weekly briefings driven by GA4 + HubSpot + Clarity.
+    Every Monday, the script ranks all property pages by inquiry rate, identifies
+    the top and bottom performers, generates a hypothesis, and produces an actionable
+    optimization briefing.
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 1 — WEEKLY EVOLUTION
+════════════════════════════════════════════════ -->
+<section style="background:#0D1B2A;">
+  <div class="section-wrapper">
+
+    <div class="section-header">
+      <div class="section-label">
+        <span class="bar"></span>
+        Weekly Evolution
+      </div>
+      <h2>Property Page Weekly Briefings</h2>
+      <p>
+        Each week, <strong style="color:#fff;">GA4 + HubSpot + Clarity</strong> rank every
+        property page by inquiry conversion rate. The worst-performing pages get
+        specific hypotheses and action items based on real behavioural data.
+        Briefings are generated automatically — check back every Monday.
+      </p>
+    </div>
+
+    <!-- Summary stats row -->
+    <div class="evolution-stats-row">
+      <div class="evo-stat">
+        <div class="evo-stat-icon orange">🏠</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value" style="color:var(--orange);">Property Pages</div>
+          <div class="evo-stat-label">All /property/* paths tracked</div>
+        </div>
+      </div>
+      <div class="evo-stat">
+        <div class="evo-stat-icon teal">📊</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value teal">Inquiry Rate</div>
+          <div class="evo-stat-label">Primary conversion metric</div>
+        </div>
+      </div>
+      <div class="evo-stat">
+        <div class="evo-stat-icon yellow">🎯</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value" style="color:var(--yellow);">Weekly Hypothesis</div>
+          <div class="evo-stat-label">Data-driven, actionable</div>
+        </div>
+      </div>
+      <div class="evo-stat">
+        <div class="evo-stat-icon teal">📋</div>
+        <div class="evo-stat-body">
+          <div class="evo-stat-value teal">Excel Tracker</div>
+          <div class="evo-stat-label">GoodLife_Property_CRO_Tracker.xlsx</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline-track">
+
+      <!-- Baseline node -->
+      <div class="baseline-node">
+        <div class="baseline-card">
+          <div>
+            <div class="baseline-week-label">Baseline — Week 0</div>
+            <div class="baseline-title">Current Property Page Template</div>
+            <div class="baseline-sub">
+              Control state — all /property/* pages as they exist on the live site.
+              Each weekly briefing identifies what to change and why.
+            </div>
+          </div>
+          <div class="baseline-badge">
+            <span class="live-dot"></span>
+            Live Now
+          </div>
+        </div>
+      </div>
+
+      <!-- Auto-generated week cards are injected above this marker -->
+      <!-- week-coming-soon-start -->
+      <div class="timeline-node placeholder-node">
+        <div class="placeholder-card">
+          <div class="placeholder-inner">
+            <div class="placeholder-week-label">Week 1 — Coming Soon</div>
+            <div class="placeholder-title">First Property Page Briefing</div>
+            <div class="placeholder-sub">
+              Run the script once to generate the first weekly analysis.
+            </div>
+            <div class="placeholder-command">python3 cro-analytics/weekly_cycle_property.py</div>
+            <div class="placeholder-info">
+              <span class="info-icon">ℹ</span>
+              <div class="info-text">
+                The script pulls <strong>GA4 property page sessions + inquiry events</strong>,
+                <strong>HubSpot pipeline deals</strong>, and optional
+                <strong>Clarity behavioural data</strong>. It ranks all
+                <code>/property/*</code> pages by inquiry rate, selects the best and worst
+                performers, derives a hypothesis, and generates a full briefing here.
+                Run every Monday for a consistent weekly cadence.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- week-coming-soon-end -->
+      <!-- /weekly-evolution-cards -->
+
+    </div><!-- /timeline-track -->
+
+  </div><!-- /section-wrapper -->
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2 — HOW IT WORKS
+════════════════════════════════════════════════ -->
+<section style="background:#0A1622; border-top: 1px solid var(--border);">
+  <div class="section-wrapper">
+
+    <div class="section-header">
+      <div class="section-label">
+        <span class="bar"></span>
+        How It Works
+      </div>
+      <h2>The Weekly Cycle</h2>
+      <p>
+        Every Monday morning, one command pulls all the data, generates the briefing,
+        and commits it to the repo. No manual data entry.
+      </p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;padding-bottom:64px;">
+
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;">
+        <div style="font-size:1.4rem;margin-bottom:12px;">1️⃣</div>
+        <div style="font-size:0.95rem;font-weight:800;color:#fff;margin-bottom:8px;">Pull Data</div>
+        <div style="font-size:0.84rem;color:var(--text-muted);line-height:1.65;">
+          GA4 pulls sessions, bounce rate, avg duration, and form-submit events
+          for every <code style="color:var(--teal);">/property/*</code> path.
+          HubSpot pulls pipeline deals and conversion rates.
+        </div>
+      </div>
+
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;">
+        <div style="font-size:1.4rem;margin-bottom:12px;">2️⃣</div>
+        <div style="font-size:0.95rem;font-weight:800;color:#fff;margin-bottom:8px;">Rank Properties</div>
+        <div style="font-size:0.84rem;color:var(--text-muted);line-height:1.65;">
+          Properties are ranked by inquiry rate (form submits ÷ sessions).
+          Top 5 best and worst performers are identified.
+          Minimum 10 sessions required to qualify.
+        </div>
+      </div>
+
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;">
+        <div style="font-size:1.4rem;margin-bottom:12px;">3️⃣</div>
+        <div style="font-size:0.95rem;font-weight:800;color:#fff;margin-bottom:8px;">Derive Hypothesis</div>
+        <div style="font-size:0.84rem;color:var(--text-muted);line-height:1.65;">
+          A decision tree checks inquiry rate, mobile bounce, avg session time,
+          winner vs. loser gap, and close-lost rate to pick the most pressing
+          lever and generate a testable hypothesis.
+        </div>
+      </div>
+
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;">
+        <div style="font-size:1.4rem;margin-bottom:12px;">4️⃣</div>
+        <div style="font-size:0.95rem;font-weight:800;color:#fff;margin-bottom:8px;">Generate Briefing</div>
+        <div style="font-size:0.84rem;color:var(--text-muted);line-height:1.65;">
+          A styled HTML briefing document is created with summary stats,
+          property rankings, the hypothesis, and 5 concrete action items
+          for the week. Saved as <code style="color:var(--teal);">week-N.html</code>.
+        </div>
+      </div>
+
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;">
+        <div style="font-size:1.4rem;margin-bottom:12px;">5️⃣</div>
+        <div style="font-size:0.95rem;font-weight:800;color:#fff;margin-bottom:8px;">Log &amp; Deploy</div>
+        <div style="font-size:0.84rem;color:var(--text-muted);line-height:1.65;">
+          Metrics are appended to <code style="color:var(--teal);">GoodLife_Property_CRO_Tracker.xlsx</code>,
+          this index is updated with a new week card, and everything is
+          committed and pushed to Cloudflare Pages automatically.
+        </div>
+      </div>
+
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;">
+        <div style="font-size:1.4rem;margin-bottom:12px;">6️⃣</div>
+        <div style="font-size:0.95rem;font-weight:800;color:#fff;margin-bottom:8px;">Manual Review</div>
+        <div style="font-size:0.84rem;color:var(--text-muted);line-height:1.65;">
+          Review the briefing, check Clarity recordings for the worst property,
+          implement the recommended changes on the live site, and track the
+          impact the following Monday.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<footer class="page-footer">
+  <strong>The Good Life Bahamas</strong> &mdash; Property Page CRO Programme
+  <span class="sep">|</span>
+  Data: GA4 + HubSpot + Clarity
+  <span class="sep">|</span>
+  <a href="../versions/" style="color:var(--teal);">Landing Page CRO →</a>
+</footer>
+
+</body>
+</html>
