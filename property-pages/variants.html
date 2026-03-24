@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Page CRO Variants — The Good Life Bahamas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Mulish', sans-serif;
+    background: #0D1B2A;
+    color: #E2E8F0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { text-decoration: none; color: inherit; }
+
+  :root {
+    --teal: #31B8C6; --teal-dark: #2AA3B0; --teal-glow: rgba(49,184,198,0.15);
+    --orange: #F28F52; --dark: #0D1B2A; --darker: #080F18;
+    --card-bg: #1A2B3C; --card-bg-2: #152232; --border: rgba(255,255,255,0.07);
+    --border-teal: rgba(49,184,198,0.25); --green: #22C55E; --yellow: #EAB308;
+    --red: #EF4444; --purple: #A855F7;
+    --text-muted: rgba(255,255,255,0.45); --text-mid: rgba(255,255,255,0.65);
+  }
+
+  /* ── Preview bar ── */
+  .preview-bar {
+    background: #080F18; border-bottom: 1px solid rgba(49,184,198,0.2);
+    padding: 9px 24px; display: flex; align-items: center; gap: 10px;
+    font-size: 0.76rem; color: var(--text-muted);
+  }
+  .preview-bar .label { font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .preview-bar a { color: var(--text-mid); font-weight: 600; transition: color 0.18s; }
+  .preview-bar a:hover { color: var(--teal); }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    background: var(--darker); border-bottom: 1px solid var(--border-teal);
+    padding: 11px 24px; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .stats-bar-items { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .stat-chip {
+    display: flex; align-items: center; gap: 7px; font-size: 0.8rem;
+    font-weight: 600; color: var(--text-mid); padding: 0 18px;
+    border-right: 1px solid var(--border);
+  }
+  .stat-chip:first-child { padding-left: 0; }
+  .stat-chip:last-child { border-right: none; }
+  .stat-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+  .stat-chip .dot.orange { background: var(--orange); }
+  .stat-chip .dot.yellow { background: var(--yellow); }
+  .stat-chip strong { color: #fff; }
+  .live-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(242,143,82,0.1); border: 1px solid rgba(242,143,82,0.3);
+    color: var(--orange); padding: 7px 16px; border-radius: 8px;
+    font-size: 0.78rem; font-weight: 700; transition: all 0.2s; white-space: nowrap;
+  }
+  .live-btn:hover { background: rgba(242,143,82,0.2); color: #fff; border-color: var(--orange); }
+
+  /* ── Page header ── */
+  .page-header {
+    background: linear-gradient(180deg, #060D14 0%, #0D1B2A 100%);
+    border-bottom: 1px solid var(--border); padding: 52px 24px 44px; text-align: center;
+  }
+  .eyebrow-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(49,184,198,0.1); border: 1px solid var(--border-teal);
+    color: var(--teal); padding: 6px 18px; border-radius: 50px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 22px;
+  }
+  .eyebrow-pill .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--teal); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  .page-header h1 { font-size: clamp(2rem,4.5vw,3.2rem); font-weight: 900; color: #fff; margin-bottom: 14px; line-height: 1.12; }
+  .page-header h1 .accent { color: var(--teal); }
+  .page-header h1 .accent-orange { color: var(--orange); }
+  .page-header .sub { color: var(--text-muted); font-size: 1rem; max-width: 620px; margin: 0 auto; line-height: 1.7; }
+
+  /* ── Section wrapper ── */
+  .section-wrapper { max-width: 1260px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── Section header ── */
+  .section-header { padding: 56px 0 36px; }
+  .section-header .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--teal); margin-bottom: 14px;
+  }
+  .section-header .section-label .bar { width: 22px; height: 2px; background: var(--teal); border-radius: 2px; }
+  .section-header h2 { font-size: clamp(1.5rem,3vw,2.1rem); font-weight: 900; color: #fff; margin-bottom: 10px; line-height: 1.2; }
+  .section-header p { color: var(--text-muted); font-size: 0.94rem; max-width: 640px; line-height: 1.65; }
+
+  /* ── Audit summary strip ── */
+  .audit-strip {
+    background: var(--card-bg-2); border: 1px solid var(--border-teal);
+    border-radius: 14px; overflow: hidden; margin-bottom: 48px; display: flex; flex-wrap: wrap;
+  }
+  .audit-stat { flex: 1; min-width: 160px; padding: 18px 24px; border-right: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .audit-stat:last-child { border-right: none; }
+  .audit-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .audit-icon.teal { background: rgba(49,184,198,0.15); }
+  .audit-icon.orange { background: rgba(242,143,82,0.15); }
+  .audit-icon.red { background: rgba(239,68,68,0.15); }
+  .audit-icon.yellow { background: rgba(234,179,8,0.15); }
+  .audit-val { font-size: 1.1rem; font-weight: 800; color: #fff; line-height: 1.2; }
+  .audit-val.teal { color: var(--teal); }
+  .audit-val.orange { color: var(--orange); }
+  .audit-val.red { color: var(--red); }
+  .audit-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+  /* ── Problems list ── */
+  .problems-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-bottom: 64px;
+  }
+  .problem-item {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .problem-item.critical { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.04); }
+  .problem-num {
+    width: 28px; height: 28px; border-radius: 8px; background: rgba(49,184,198,0.12);
+    border: 1px solid var(--border-teal); color: var(--teal); font-size: 0.75rem;
+    font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .problem-num.critical { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: var(--red); }
+  .problem-title { font-size: 0.88rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .problem-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+  .critical-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
+    color: var(--red); padding: 2px 8px; border-radius: 50px;
+    font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+    margin-left: 8px;
+  }
+
+  /* ── Variant cards ── */
+  .variants-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px,1fr)); gap: 28px; margin-bottom: 64px; }
+  .variant-card {
+    background: var(--card-bg); border: 1px solid var(--border-teal);
+    border-radius: 20px; overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .variant-card:hover { border-color: var(--teal); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+
+  /* Preview thumbnail */
+  .variant-thumb {
+    position: relative; height: 200px; overflow: hidden;
+    background: var(--card-bg-2);
+  }
+  .variant-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.75); transition: filter 0.3s; }
+  .variant-card:hover .variant-thumb img { filter: brightness(0.9); }
+  .variant-thumb-overlay {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: flex-start; justify-content: flex-end; padding: 18px 20px;
+    background: linear-gradient(transparent 30%, rgba(8,15,24,0.85) 100%);
+  }
+  .variant-number {
+    position: absolute; top: 14px; left: 14px;
+    background: rgba(8,15,24,0.75); border: 1px solid var(--border-teal);
+    color: var(--teal); padding: 4px 14px; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .variant-number.v1 { color: var(--teal); border-color: var(--border-teal); }
+  .variant-number.v2 { color: var(--orange); border-color: rgba(242,143,82,0.4); }
+  .variant-number.v3 { color: var(--green); border-color: rgba(34,197,94,0.4); }
+  .variant-thumb-title { font-size: 1.15rem; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 4px; }
+  .variant-thumb-sub { font-size: 0.78rem; color: rgba(255,255,255,0.65); font-weight: 600; }
+  .view-live-btn {
+    position: absolute; top: 14px; right: 14px;
+    background: rgba(8,15,24,0.75); border: 1px solid var(--border);
+    color: var(--text-mid); padding: 5px 12px; border-radius: 8px;
+    font-size: 0.7rem; font-weight: 700; transition: all 0.18s;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .view-live-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+
+  /* Card body */
+  .variant-body { padding: 22px 24px; display: flex; flex-direction: column; flex: 1; }
+  .hypothesis-label {
+    font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 8px;
+  }
+  .hypothesis-text {
+    font-size: 0.92rem; color: var(--text-mid); line-height: 1.65;
+    font-style: italic; margin-bottom: 20px; flex: 1;
+  }
+  .changes-label {
+    font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 10px;
+  }
+  .changes-list { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 22px; }
+  .changes-list li {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 0.82rem; color: var(--text-mid); line-height: 1.5;
+  }
+  .changes-list li .chk { color: var(--teal); font-size: 0.8rem; margin-top: 1px; flex-shrink: 0; font-weight: 900; }
+  .changes-list li .chk.orange { color: var(--orange); }
+  .changes-list li .chk.green { color: var(--green); }
+
+  /* Addresses tag strip */
+  .addresses-strip { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .addr-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    color: var(--text-muted); padding: 4px 10px; border-radius: 6px;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .addr-tag.critical { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.25); color: var(--red); }
+
+  /* CTA button */
+  .variant-cta {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: rgba(49,184,198,0.1); border: 1px solid var(--border-teal);
+    color: var(--teal); padding: 12px 20px; border-radius: 12px;
+    font-size: 0.85rem; font-weight: 800; transition: all 0.2s;
+  }
+  .variant-cta:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .variant-cta.orange { background: rgba(242,143,82,0.1); border-color: rgba(242,143,82,0.35); color: var(--orange); }
+  .variant-cta.orange:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .variant-cta.green { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.35); color: var(--green); }
+  .variant-cta.green:hover { background: var(--green); color: #fff; border-color: var(--green); }
+
+  /* ── Recommendation card ── */
+  .recommendation-card {
+    background: linear-gradient(135deg, #1A2B3C 0%, #152232 100%);
+    border: 1px solid var(--border-teal); border-radius: 20px;
+    padding: 32px 36px; margin-bottom: 64px; position: relative; overflow: hidden;
+  }
+  .recommendation-card::before {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(49,184,198,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .rec-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.3);
+    color: var(--yellow); padding: 5px 14px; border-radius: 50px;
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .recommendation-card h3 { font-size: 1.5rem; font-weight: 900; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+  .recommendation-card h3 .accent { color: var(--teal); }
+  .recommendation-card p { font-size: 0.94rem; color: var(--text-mid); line-height: 1.7; max-width: 700px; margin-bottom: 24px; }
+  .rec-steps { display: flex; flex-direction: column; gap: 12px; }
+  .rec-step { display: flex; align-items: flex-start; gap: 14px; }
+  .rec-step-num {
+    width: 28px; height: 28px; border-radius: 8px; background: rgba(49,184,198,0.12);
+    border: 1px solid var(--border-teal); color: var(--teal); font-size: 0.78rem;
+    font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .rec-step-title { font-size: 0.9rem; font-weight: 800; color: #fff; margin-bottom: 3px; }
+  .rec-step-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+
+  /* ── Baseline comparison bar ── */
+  .baseline-bar {
+    background: var(--card-bg-2); border: 1px solid rgba(242,143,82,0.3);
+    border-radius: 14px; padding: 18px 24px; margin-bottom: 28px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  }
+  .baseline-bar-left {}
+  .baseline-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 5px; }
+  .baseline-title { font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 3px; }
+  .baseline-sub { font-size: 0.82rem; color: var(--text-muted); }
+  .baseline-live-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(242,143,82,0.1); border: 1px solid rgba(242,143,82,0.3);
+    color: var(--orange); padding: 7px 16px; border-radius: 8px;
+    font-size: 0.78rem; font-weight: 800;
+  }
+  .baseline-live-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); animation: pulse 1.8s infinite; }
+  .baseline-view-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    color: var(--text-mid); padding: 7px 16px; border-radius: 8px;
+    font-size: 0.78rem; font-weight: 700; transition: all 0.2s;
+  }
+  .baseline-view-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+  /* ── Footer ── */
+  .page-footer {
+    background: var(--darker); border-top: 1px solid var(--border);
+    padding: 24px; text-align: center; font-size: 0.78rem; color: var(--text-muted);
+  }
+  .page-footer strong { color: var(--text-mid); }
+  .page-footer .sep { margin: 0 8px; opacity: 0.4; }
+  .page-footer a { color: var(--teal); transition: color 0.18s; }
+  .page-footer a:hover { color: #fff; }
+
+  @media (max-width: 720px) {
+    .audit-strip { flex-direction: column; }
+    .audit-stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .audit-stat:last-child { border-bottom: none; }
+    .variants-grid { grid-template-columns: 1fr; }
+    .problems-grid { grid-template-columns: 1fr; }
+    .recommendation-card { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Preview bar -->
+<div class="preview-bar">
+  <span class="label">Live Preview</span>
+  <span>→</span>
+  <a href="https://goodlife-landing-ab.pages.dev/property-pages/variants.html" target="_blank" rel="noopener">
+    https://goodlife-landing-ab.pages.dev/property-pages/variants.html
+  </a>
+</div>
+
+<!-- Stats bar -->
+<div class="stats-bar">
+  <div class="stats-bar-items">
+    <div class="stat-chip"><span class="dot orange"></span><span>Property: <strong>Surf House</strong></span></div>
+    <div class="stat-chip"><span class="dot"></span><span><strong>3 Variants</strong> — Pre-Week Analysis</span></div>
+    <div class="stat-chip"><span class="dot yellow"></span><span><strong>7 Issues</strong> identified on live page</span></div>
+  </div>
+  <a href="https://www.thegoodlifebahamasrentals.com/property/surf-house/" target="_blank" class="live-btn">
+    🌐 View Live Page
+  </a>
+</div>
+
+<!-- Page header -->
+<div class="page-header">
+  <div class="eyebrow-pill"><span class="pulse"></span>Property Page CRO — Surf House</div>
+  <h1>
+    3 Variants to Test on<br>
+    <span class="accent">Surf House</span> <span style="color:var(--text-muted);font-size:0.75em;font-weight:700;">· Exuma, Bahamas</span>
+  </h1>
+  <p class="sub">
+    A manual CRO audit of the live property page found 7 conversion friction points.
+    Three standalone variants have been built — each targeting a different root cause.
+    Pick one, implement it, then track the impact in the weekly cycle.
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 1 — AUDIT FINDINGS
+════════════════════════════════════════════════ -->
+<section style="background:#0D1B2A;">
+  <div class="section-wrapper">
+
+    <div class="section-header">
+      <div class="section-label"><span class="bar"></span>Audit Findings</div>
+      <h2>7 Issues Found on the Live Page</h2>
+      <p>The current Surf House page was reviewed against CRO best practices for high-consideration luxury rentals ($1,000+/night). Here's what's working against conversion.</p>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="audit-strip">
+      <div class="audit-stat">
+        <div class="audit-icon orange">🏷</div>
+        <div>
+          <div class="audit-val orange">$1,210</div>
+          <div class="audit-label">Price per night (standard)</div>
+        </div>
+      </div>
+      <div class="audit-stat">
+        <div class="audit-icon red">⚠️</div>
+        <div>
+          <div class="audit-val red">0</div>
+          <div class="audit-label">Guest reviews on the page</div>
+        </div>
+      </div>
+      <div class="audit-stat">
+        <div class="audit-icon teal">🎯</div>
+        <div>
+          <div class="audit-val teal">1 CTA</div>
+          <div class="audit-label">"Book Now" — high commitment only</div>
+        </div>
+      </div>
+      <div class="audit-stat">
+        <div class="audit-icon yellow">📝</div>
+        <div>
+          <div class="audit-val" style="color:var(--yellow);">Generic</div>
+          <div class="audit-label">Headline copy — just "Surf House"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problems list -->
+    <div class="problems-grid">
+
+      <div class="problem-item critical">
+        <div class="problem-num critical">1</div>
+        <div>
+          <div class="problem-title">No reviews on the page <span class="critical-tag">Critical</span></div>
+          <div class="problem-desc">The page says "No reviews yet." At $1,210/night, the absence of any social proof is a major trust gap. Visitors have no validation that others had a good experience. Even 2–3 reviews would significantly lift conversion.</div>
+        </div>
+      </div>
+
+      <div class="problem-item critical">
+        <div class="problem-num critical">2</div>
+        <div>
+          <div class="problem-title">Single high-commitment CTA <span class="critical-tag">Critical</span></div>
+          <div class="problem-desc">"Book Now" requires selecting dates and committing before enquiring. Most visitors to a $1,200/night property are in research mode — they need a "Check Availability" or "Ask a Question" path before they're ready to book.</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="problem-num">3</div>
+        <div>
+          <div class="problem-title">Weak headline — no value proposition</div>
+          <div class="problem-desc">The H1 is simply "Surf House." It says nothing about the experience, the location, or why this property is worth $1,210/night. A visitor who lands here from a search or social ad gets zero context above the fold.</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="problem-num">4</div>
+        <div>
+          <div class="problem-title">Generic description copy</div>
+          <div class="problem-desc">"A luxurious haven located in the heart of Hartswell" is technically accurate but doesn't sell the dream. Luxury rental buyers want to feel the experience before they buy it. The copy reads like a listing template, not an invitation.</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="problem-num">5</div>
+        <div>
+          <div class="problem-title">Price shown without context</div>
+          <div class="problem-desc">$1,210/night looks steep in isolation. Split across 8 guests, it's $151/person — which is competitive. There's no per-person framing, no "includes" list, and no explanation of what makes this price justified.</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="problem-num">6</div>
+        <div>
+          <div class="problem-title">Trust badges buried in global nav only</div>
+          <div class="problem-desc">The 2025 Emmy Award and 100 Collection membership are significant trust signals — but they only appear in the header area. They should be on the property card itself, where buying decisions are made.</div>
+        </div>
+      </div>
+
+      <div class="problem-item">
+        <div class="problem-num">7</div>
+        <div>
+          <div class="problem-title">No urgency or scarcity signals</div>
+          <div class="problem-desc">Nothing on the page tells the visitor to act now. Luxury rental pages that show availability windows ("limited dates in June") or popularity signals ("high demand") consistently convert better than static listings.</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2 — THE 3 VARIANTS
+════════════════════════════════════════════════ -->
+<section style="background:#0A1622; border-top: 1px solid var(--border);">
+  <div class="section-wrapper">
+
+    <div class="section-header">
+      <div class="section-label"><span class="bar"></span>The Variants</div>
+      <h2>3 Versions — One Issue Each</h2>
+      <p>Each variant isolates a different root cause. Test one at a time over a week, track inquiry rate against the baseline, then roll in the winner.</p>
+    </div>
+
+    <!-- Baseline comparison -->
+    <div class="baseline-bar">
+      <div class="baseline-bar-left">
+        <div class="baseline-label">Baseline — Control</div>
+        <div class="baseline-title">Current Live Page · Surf House</div>
+        <div class="baseline-sub">thegoodlifebahamasrentals.com/property/surf-house/ — as it exists today</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div class="baseline-live-badge"><span class="dot"></span>Live Now</div>
+        <a href="https://www.thegoodlifebahamasrentals.com/property/surf-house/" target="_blank" class="baseline-view-btn">View Baseline →</a>
+      </div>
+    </div>
+
+    <!-- Variant cards -->
+    <div class="variants-grid">
+
+      <!-- V1 — Trust & Urgency -->
+      <div class="variant-card">
+        <div class="variant-thumb">
+          <img src="https://www.thegoodlifebahamasrentals.com/wp-content/uploads/2024/05/Surf-house-1.webp" alt="Surf House V1">
+          <div class="variant-thumb-overlay">
+            <span class="variant-number v1">Variant 1</span>
+            <a href="v1-trust-urgency.html" class="view-live-btn" target="_blank">View ↗</a>
+            <div class="variant-thumb-title">Trust &amp; Urgency</div>
+            <div class="variant-thumb-sub">Social proof · Scarcity · Price context</div>
+          </div>
+        </div>
+        <div class="variant-body">
+          <div class="hypothesis-label">Hypothesis</div>
+          <p class="hypothesis-text">"The absence of social proof and urgency signals is causing drop-off. Adding reviews, trust badges, and a scarcity indicator will reassure hesitant visitors at this price point."</p>
+
+          <div class="changes-label">Key Changes</div>
+          <ul class="changes-list">
+            <li><span class="chk">✓</span> Emmy Award + 100 Collection badges placed directly under the property title</li>
+            <li><span class="chk">✓</span> "High demand" urgency bar — limited April–June availability signal</li>
+            <li><span class="chk">✓</span> 3 guest review cards with star ratings (pull from verified sources)</li>
+            <li><span class="chk">✓</span> Per-person price breakdown — "$151/person based on 8 guests"</li>
+            <li><span class="chk">✓</span> Trust signals repeated inside the booking sidebar</li>
+            <li><span class="chk">✓</span> Video tour surfaced as a prominent button (not a hidden link)</li>
+          </ul>
+
+          <div class="addresses-strip">
+            <span class="addr-tag critical">↑ Fixes #1 — No Reviews</span>
+            <span class="addr-tag critical">↑ Fixes #5 — Price Context</span>
+            <span class="addr-tag">↑ Fixes #6 — Trust Badges</span>
+            <span class="addr-tag">↑ Fixes #7 — No Urgency</span>
+          </div>
+
+          <a href="v1-trust-urgency.html" class="variant-cta">View Variant 1 →</a>
+        </div>
+      </div>
+
+      <!-- V2 — Inquiry-First -->
+      <div class="variant-card">
+        <div class="variant-thumb">
+          <img src="https://www.thegoodlifebahamasrentals.com/wp-content/uploads/2024/05/Surf-house-2-300x200.webp" alt="Surf House V2">
+          <div class="variant-thumb-overlay">
+            <span class="variant-number v2">Variant 2</span>
+            <a href="v2-inquiry-first.html" class="view-live-btn" target="_blank">View ↗</a>
+            <div class="variant-thumb-title">Inquiry-First</div>
+            <div class="variant-thumb-sub">Split CTA · Inline form · Concierge front &amp; centre</div>
+          </div>
+        </div>
+        <div class="variant-body">
+          <div class="hypothesis-label">Hypothesis</div>
+          <p class="hypothesis-text">"'Book Now' creates commitment anxiety on a $1,210/night property. Splitting into 'Check Availability' + 'Ask a Concierge' — with an inline inquiry form — will get more total engagement from visitors in research mode."</p>
+
+          <div class="changes-label">Key Changes</div>
+          <ul class="changes-list">
+            <li><span class="chk orange">✓</span> Primary CTA changed to "Check Availability" (not "Book Now")</li>
+            <li><span class="chk orange">✓</span> Secondary CTA "Ask a Concierge" sits alongside it</li>
+            <li><span class="chk orange">✓</span> Inline quick-inquiry form: name, email, dates, message</li>
+            <li><span class="chk orange">✓</span> "We reply in under 20 minutes" badge prominently on form</li>
+            <li><span class="chk orange">✓</span> Concierge intro strip above the description — lowers perceived friction</li>
+            <li><span class="chk orange">✓</span> Price reframed as "from $1,089/night" with "no booking fees" note</li>
+          </ul>
+
+          <div class="addresses-strip">
+            <span class="addr-tag critical">↑ Fixes #2 — Single CTA</span>
+            <span class="addr-tag">↑ Fixes #5 — Price Context</span>
+          </div>
+
+          <a href="v2-inquiry-first.html" class="variant-cta orange">View Variant 2 →</a>
+        </div>
+      </div>
+
+      <!-- V3 — Experience-Led -->
+      <div class="variant-card">
+        <div class="variant-thumb">
+          <img src="https://www.thegoodlifebahamasrentals.com/wp-content/uploads/2024/05/Surf-house-3-300x225.webp" alt="Surf House V3">
+          <div class="variant-thumb-overlay">
+            <span class="variant-number v3">Variant 3</span>
+            <a href="v3-experience-led.html" class="view-live-btn" target="_blank">View ↗</a>
+            <div class="variant-thumb-title">Experience-Led Copy</div>
+            <div class="variant-thumb-sub">Emotional headline · Lifestyle copy · Location story</div>
+          </div>
+        </div>
+        <div class="variant-body">
+          <div class="hypothesis-label">Hypothesis</div>
+          <p class="hypothesis-text">"Generic copy doesn't sell a $1,210/night experience. Rewriting with sensory, lifestyle-driven language will increase time-on-page and emotional engagement — leading to more inquiries."</p>
+
+          <div class="changes-label">Key Changes</div>
+          <ul class="changes-list">
+            <li><span class="chk green">✓</span> New headline: "Wake Up to Turquoise Water. Every Morning."</li>
+            <li><span class="chk green">✓</span> Full description rewrite — sensory, experiential, not a listing template</li>
+            <li><span class="chk green">✓</span> "A Day at Surf House" timeline section — 5 moments from morning to dinner</li>
+            <li><span class="chk green">✓</span> Location storytelling — Exuma as a destination, not just an address</li>
+            <li><span class="chk green">✓</span> Photo captions added — "Pool deck overlooking Moriah Harbour" etc.</li>
+            <li><span class="chk green">✓</span> Location grid: The Water, Bonefishing, Boat to the Cays, George Town</li>
+          </ul>
+
+          <div class="addresses-strip">
+            <span class="addr-tag">↑ Fixes #3 — Weak Headline</span>
+            <span class="addr-tag">↑ Fixes #4 — Generic Copy</span>
+          </div>
+
+          <a href="v3-experience-led.html" class="variant-cta green">View Variant 3 →</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 3 — RECOMMENDATION & NEXT STEPS
+════════════════════════════════════════════════ -->
+<section style="background:#0D1B2A; border-top: 1px solid var(--border);">
+  <div class="section-wrapper">
+
+    <div class="section-header">
+      <div class="section-label"><span class="bar"></span>Recommendation</div>
+      <h2>Where to Start</h2>
+      <p>All three issues are real — but not all are equally urgent. Here's the suggested order.</p>
+    </div>
+
+    <div class="recommendation-card">
+      <div class="rec-eyebrow">⭐ Start Here</div>
+      <h3>Test <span class="accent">Variant 2 (Inquiry-First)</span> first</h3>
+      <p>
+        The biggest drop-off on a $1,210/night property happens at the CTA. Most visitors are in
+        research mode — they're not ready to select dates and click "Book Now" on a first visit.
+        Variant 2 gives them a lower-friction path. Every inquiry becomes a sales conversation
+        that Isaac can close through HubSpot. If inquiry rate goes up, the other variants
+        become less urgent — you've already fixed the funnel.
+      </p>
+      <div class="rec-steps">
+        <div class="rec-step">
+          <div class="rec-step-num">1</div>
+          <div>
+            <div class="rec-step-title">Implement Variant 2 changes on the live Surf House page</div>
+            <div class="rec-step-desc">Split "Book Now" into "Check Availability" + "Ask a Concierge". Add the inline inquiry form. Takes 1–2 hours in Elementor/WordPress.</div>
+          </div>
+        </div>
+        <div class="rec-step">
+          <div class="rec-step-num">2</div>
+          <div>
+            <div class="rec-step-title">Run the weekly cycle script after 7 days</div>
+            <div class="rec-step-desc">GA4 will capture inquiry events (form submits). Compare inquiry rate week-over-week in the tracker. This is your signal.</div>
+          </div>
+        </div>
+        <div class="rec-step">
+          <div class="rec-step-num">3</div>
+          <div>
+            <div class="rec-step-title">If inquiry rate improves → roll Variant 1 changes in next</div>
+            <div class="rec-step-desc">Add trust badges + urgency signals. Once you have the inquiry pipeline flowing, social proof helps close the ones still on the fence.</div>
+          </div>
+        </div>
+        <div class="rec-step">
+          <div class="rec-step-num">4</div>
+          <div>
+            <div class="rec-step-title">Test Variant 3 copy on a property with more traffic</div>
+            <div class="rec-step-desc">Experience-led copy needs traffic volume to show statistical signal. Apply it to your highest-traffic property page first for faster results.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<footer class="page-footer">
+  <strong>The Good Life Bahamas</strong> — Property Page CRO · Surf House
+  <span class="sep">|</span>
+  <a href="index.html">← Property CRO Dashboard</a>
+  <span class="sep">|</span>
+  <a href="../versions/">Landing Page CRO →</a>
+  <span class="sep">|</span>
+  <a href="https://www.thegoodlifebahamasrentals.com/property/surf-house/" target="_blank">Live Page ↗</a>
+</footer>
+
+</body>
+</html>
